@@ -13,18 +13,14 @@ export class AuthController {
   @Public()
   @Post('login')
   signIn(@Body() signInDto: LoginDto) {
-    return this.authService.signIn(signInDto.email, signInDto.password);
+    return this.authService.signIn(signInDto);
   }
 
   @HttpCode(HttpStatus.CREATED)
   @Public()
   @Post('register')
   register(@Body() registerDto: RegisterDto) {
-    return this.authService.register(
-      registerDto.name,
-      registerDto.email,
-      registerDto.password,
-    );
+    return this.authService.register(registerDto);
   }
 }
 

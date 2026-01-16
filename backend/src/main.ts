@@ -12,6 +12,7 @@ async function bootstrap() {
     new ValidationPipe({
       disableErrorMessages: configService.get('NODE_ENV') === 'production',
       transform: true,
+      whitelist: true
     }),
   );
   
