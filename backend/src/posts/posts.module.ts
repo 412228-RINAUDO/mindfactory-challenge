@@ -4,12 +4,14 @@ import { PostsRepository } from './posts.repository';
 import { PostsController } from './posts.controller';
 import { PrismaModule } from '../prisma/prisma.module';
 import { POSTS_REPOSITORY } from './posts.tokens';
+import { AuthorizationService } from '../common/services/authorization.service';
 
 @Module({
   imports: [PrismaModule],
   controllers: [PostsController],
   providers: [
     PostsService,
+    AuthorizationService,
     {
       provide: POSTS_REPOSITORY,
       useClass: PostsRepository,
