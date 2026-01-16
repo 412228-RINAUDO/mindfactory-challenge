@@ -12,4 +12,8 @@ export class UsersService {
   async findByEmail(email: string) {
     return this.usersRepository.findByEmail(email);
   }
+
+  async create(data: { name: string; email: string; password: string }) {
+    return this.usersRepository.create(data);
+  }
 }
