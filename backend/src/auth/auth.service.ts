@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { EmailAlreadyExistsException } from 'src/common/exceptions/email-already-exists.exception';
 
 @Injectable()
 export class AuthService {
@@ -33,7 +34,7 @@ export class AuthService {
   async register(data: RegisterDto) {
     const existingUser = await this.usersService.findByEmail(data.email);
     if (existingUser) {
-      throw new ConflictException('Email already exists');
+      throw new EmailAlreadyExistsException();
     }
 
     const user = await this.usersService.create({ 
