@@ -6,11 +6,20 @@ import { IPostsRepository } from './posts.repository.interface';
 export class PostsRepository implements IPostsRepository {
   constructor(private prisma: PrismaService) {}
 
-  async findAll() {
-    return this.prisma.post.findMany({
-      include: { user: true },
-      orderBy: { createdAt: 'desc' },
-    });
+  async findAll(page: number, pageItems: number) {
+    const skip = (page - 1) * pageItems;
+
+    const [data, total] = await Promise.all([
+      this.prisma.post.findMany({
+        skip,
+        take: pageItems,
+        include: { user: true },
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.post.count(),
+    ]);
+
+    return { data, total };
   }
 
   async findById(id: string) {

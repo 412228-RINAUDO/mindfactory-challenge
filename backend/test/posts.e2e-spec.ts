@@ -75,16 +75,24 @@ describe('Posts (e2e)', () => {
         .get('/posts')
         .expect(200);
 
-      expect(Array.isArray(response.body)).toBe(true);
-      expect(response.body).toHaveLength(1);
-      expect(response.body[0]).toHaveProperty('id');
-      expect(response.body[0]).toHaveProperty('title', 'Test Post');
-      expect(response.body[0]).toHaveProperty('content', 'Test Content');
-      expect(response.body[0]).toHaveProperty('user');
-      expect(response.body[0].user).toHaveProperty('name', 'Test User');
-      expect(response.body[0].user).toHaveProperty('email', 'test@example.com');
-      expect(response.body[0].user).not.toHaveProperty('password');
-      expect(response.body[0]).toHaveProperty('createdAt');
+      expect(response.body).toHaveProperty('data');
+      expect(response.body).toHaveProperty('meta');
+      expect(Array.isArray(response.body.data)).toBe(true);
+      expect(response.body.data).toHaveLength(1);
+      expect(response.body.data[0]).toHaveProperty('id');
+      expect(response.body.data[0]).toHaveProperty('title', 'Test Post');
+      expect(response.body.data[0]).toHaveProperty('content', 'Test Content');
+      expect(response.body.data[0]).toHaveProperty('user');
+      expect(response.body.data[0].user).toHaveProperty('name', 'Test User');
+      expect(response.body.data[0].user).toHaveProperty('email', 'test@example.com');
+      expect(response.body.data[0].user).not.toHaveProperty('password');
+      expect(response.body.data[0]).toHaveProperty('createdAt');
+      
+      // Check pagination meta
+      expect(response.body.meta).toHaveProperty('page', 1);
+      expect(response.body.meta).toHaveProperty('pageItems', 10);
+      expect(response.body.meta).toHaveProperty('total', 1);
+      expect(response.body.meta).toHaveProperty('totalPages', 1);
     });
 
     it('should return empty array when no posts exist', async () => {
@@ -92,8 +100,11 @@ describe('Posts (e2e)', () => {
         .get('/posts')
         .expect(200);
 
-      expect(Array.isArray(response.body)).toBe(true);
-      expect(response.body).toHaveLength(0);
+      expect(response.body).toHaveProperty('data');
+      expect(response.body).toHaveProperty('meta');
+      expect(Array.isArray(response.body.data)).toBe(true);
+      expect(response.body.data).toHaveLength(0);
+      expect(response.body.meta.total).toBe(0);
     });
 
     it('should return posts ordered by createdAt desc', async () => {
@@ -115,9 +126,23 @@ describe('Posts (e2e)', () => {
         .get('/posts')
         .expect(200);
 
-      expect(response.body).toHaveLength(2);
-      expect(response.body[0].title).toBe('Second Post');
-      expect(response.body[1].title).toBe('First Post');
+      expect(response.body.data).toHaveLength(2);
+      expect(response.body.data[0].title).toBe('Second Post');
+      expect(response.body.data[1].title).toBe('First Post');
+    });
+
+    it('should use default pagination values', async () => {
+      await request(app.getHttpServer())
+        .post('/posts')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ title: 'Test Post', content: 'Test Content' });
+
+      const response = await request(app.getHttpServer())
+        .get('/posts')
+        .expect(200);
+
+      expect(response.body.meta.page).toBe(1);
+      expect(response.body.meta.pageItems).toBe(10);
     });
   });
 
