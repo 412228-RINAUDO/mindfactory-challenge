@@ -10,6 +10,10 @@ export class UsersRepository implements IUsersRepository {
     return this.prisma.user.findUnique({ where: { email } });
   }
 
+  async findById(id: string) {
+    return this.prisma.user.findUnique({ where: { id } });
+  }
+
   async create(data: { name: string; email: string; password: string }) {
     return this.prisma.user.create({ data });
   }
