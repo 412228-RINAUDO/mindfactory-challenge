@@ -1,10 +1,11 @@
-import { Injectable, UnauthorizedException, ConflictException } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { EmailAlreadyExistsException } from 'src/common/exceptions/email-already-exists.exception';
+import { InvalidCredentialsException } from 'src/common/exceptions/invalid-credentials.exception';
 
 @Injectable()
 export class AuthService {
@@ -16,12 +17,12 @@ export class AuthService {
   async signIn(data: LoginDto): Promise<{ access_token: string }> {
     const user = await this.usersService.findByEmail(data.email);
     if (!user) {
-      throw new UnauthorizedException();
+      throw new InvalidCredentialsException();
     }
 
     const isPasswordValid = await bcrypt.compare(data.password, user.password);
     if (!isPasswordValid) {
-      throw new UnauthorizedException();
+      throw new InvalidCredentialsException();
     }
 
     const payload = { sub: user.id, email: user.email };

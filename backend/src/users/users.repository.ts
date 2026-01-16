@@ -17,4 +17,8 @@ export class UsersRepository implements IUsersRepository {
   async create(data: { name: string; email: string; password: string }) {
     return this.prisma.user.create({ data });
   }
+
+  async update(id: string, data: { name?: string; email?: string; password?: string }) {
+    return this.prisma.user.update({ where: { id }, data });
+  }
 }
