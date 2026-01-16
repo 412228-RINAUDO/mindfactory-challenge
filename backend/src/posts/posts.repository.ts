@@ -12,4 +12,11 @@ export class PostsRepository implements IPostsRepository {
       orderBy: { createdAt: 'desc' },
     });
   }
+
+  async findById(id: string) {
+    return this.prisma.post.findUnique({
+      where: { id },
+      include: { user: true },
+    });
+  }
 }
