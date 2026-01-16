@@ -12,7 +12,6 @@ async function bootstrap() {
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(
     new ValidationPipe({
-      disableErrorMessages: configService.get('NODE_ENV') === 'production',
       transform: true,
       whitelist: true
     }),
