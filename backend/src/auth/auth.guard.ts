@@ -6,9 +6,9 @@ import {
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import { IS_PUBLIC_KEY } from 'src/public/public.decorator';
-import { MissingTokenException } from 'src/common/exceptions/missing-token.exception';
-import { InvalidTokenException } from 'src/common/exceptions/invalid-token.exception';
+import { IS_PUBLIC_KEY } from '../public/public.decorator';
+import { MissingTokenException } from '../common/exceptions/missing-token.exception';
+import { InvalidTokenException } from '../common/exceptions/invalid-token.exception';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

@@ -4,8 +4,8 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import { EmailAlreadyExistsException } from 'src/common/exceptions/email-already-exists.exception';
-import { InvalidCredentialsException } from 'src/common/exceptions/invalid-credentials.exception';
+import { EmailAlreadyExistsException } from '../common/exceptions/email-already-exists.exception';
+import { InvalidCredentialsException } from '../common/exceptions/invalid-credentials.exception';
 
 @Injectable()
 export class AuthService {

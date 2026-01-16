@@ -3,6 +3,7 @@ import type { IPostsRepository } from './posts.repository.interface';
 import { POSTS_REPOSITORY } from './posts.tokens';
 import { PostNotFoundException } from '../common/exceptions/post-not-found.exception';
 import { CreatePostDto } from './dto/create-post.dto';
+import { UpdatePostDto } from './dto/update-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -30,5 +31,9 @@ export class PostsService {
       ...data,
       userId,
     });
+  }
+
+  async update(postId: string, data: UpdatePostDto) {
+    return this.postsRepository.update(postId, data);
   }
 }

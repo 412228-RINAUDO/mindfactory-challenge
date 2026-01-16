@@ -1,13 +1,18 @@
-import { Controller, Get, Post, Param, Body, Req } from '@nestjs/common';
+import { Controller, Get, Post, Put, Param, Body, Req } from '@nestjs/common';
 import type { AuthenticatedRequest } from '../common/types/authenticated-request.interface';
 import { PostsService } from './posts.service';
 import { PostResponseDto } from './dto/post-response.dto';
 import { CreatePostDto } from './dto/create-post.dto';
-import { Public } from 'src/public/public.decorator';
+import { UpdatePostDto } from './dto/update-post.dto';
+import { Public } from '../public/public.decorator';
+import { AuthorizationService } from '../common/services/authorization.service';
 
 @Controller('posts')
 export class PostsController {
-  constructor(private readonly postsService: PostsService) {}
+  constructor(
+    private readonly postsService: PostsService,
+    private readonly authorizationService: AuthorizationService,
+  ) {}
 
   @Get()
   @Public()
@@ -30,5 +35,18 @@ export class PostsController {
   ): Promise<PostResponseDto> {
     const post = await this.postsService.create(req.user.sub, createPostDto);
     return new PostResponseDto(post);
+  }
+
+  @Put(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() updatePostDto: UpdatePostDto,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<PostResponseDto> {
+    const post = await this.postsService.findById(id);
+    this.authorizationService.checkOwnership(req.user.sub, post.userId);
+
+    const updatedPost = await this.postsService.update(id, updatePostDto);
+    return new PostResponseDto(updatedPost);
   }
 }

@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../prisma/prisma.service';
 import { IPostsRepository } from './posts.repository.interface';
 
 @Injectable()
@@ -22,6 +22,14 @@ export class PostsRepository implements IPostsRepository {
 
   async create(data: { title: string; content: string; userId: string }) {
     return this.prisma.post.create({
+      data,
+      include: { user: true },
+    });
+  }
+
+  async update(id: string, data: { title?: string; content?: string }) {
+    return this.prisma.post.update({
+      where: { id },
       data,
       include: { user: true },
     });
