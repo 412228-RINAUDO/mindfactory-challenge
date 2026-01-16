@@ -19,4 +19,11 @@ export class PostsRepository implements IPostsRepository {
       include: { user: true },
     });
   }
+
+  async create(data: { title: string; content: string; userId: string }) {
+    return this.prisma.post.create({
+      data,
+      include: { user: true },
+    });
+  }
 }

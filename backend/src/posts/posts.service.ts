@@ -2,6 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import type { IPostsRepository } from './posts.repository.interface';
 import { POSTS_REPOSITORY } from './posts.tokens';
 import { PostNotFoundException } from '../common/exceptions/post-not-found.exception';
+import { CreatePostDto } from './dto/create-post.dto';
 
 @Injectable()
 export class PostsService {
@@ -22,5 +23,12 @@ export class PostsService {
     }
 
     return post;
+  }
+
+  async create(userId: string, data: CreatePostDto) {
+    return this.postsRepository.create({
+      ...data,
+      userId,
+    });
   }
 }

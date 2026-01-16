@@ -1,4 +1,5 @@
-import { Controller, Get, Param, Put, Body, Request } from '@nestjs/common';
+import { Controller, Get, Param, Put, Body, Req } from '@nestjs/common';
+import type { AuthenticatedRequest } from '../common/types/authenticated-request.interface';
 import { UsersService } from './users.service';
 import { UserResponseDto } from './dto/user-response.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -18,7 +19,7 @@ export class UsersController {
   async update(
     @Param('id') id: string,
     @Body() updateUserDto: UpdateUserDto,
-    @Request() req: any,
+    @Req() req: AuthenticatedRequest,
   ): Promise<UserResponseDto> {
     if (!this.isOwner(req.user.sub, id)) {
       throw new ForbiddenException();
