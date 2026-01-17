@@ -2,9 +2,10 @@ import { Injectable, Logger } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
+import { plainToInstance } from 'class-transformer';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
-import { AuthResponseDto } from './dto/auth-response.dto';
+import { AuthResponseDto, AuthUserDto } from './dto/auth-response.dto';
 import { EmailAlreadyExistsException } from '../common/exceptions/email-already-exists.exception';
 import { InvalidCredentialsException } from '../common/exceptions/invalid-credentials.exception';
 
