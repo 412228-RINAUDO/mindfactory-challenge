@@ -44,6 +44,7 @@ describe('Auth (e2e)', () => {
           expect(res.body).toHaveProperty('access_token');
           expect(typeof res.body.access_token).toBe('string');
           expect(res.body).toHaveProperty('user');
+          expect(res.body.user).toHaveProperty('id');
           expect(res.body.user).toHaveProperty('name', 'Test User');
           expect(res.body.user).toHaveProperty('email', 'test@example.com');
         });
@@ -106,6 +107,7 @@ describe('Auth (e2e)', () => {
           expect(res.body).toHaveProperty('access_token');
           expect(typeof res.body.access_token).toBe('string');
           expect(res.body).toHaveProperty('user');
+          expect(res.body.user).toHaveProperty('id');
           expect(res.body.user).toHaveProperty('name', 'Test User');
           expect(res.body.user).toHaveProperty('email', 'test@example.com');
         });
