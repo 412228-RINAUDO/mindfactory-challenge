@@ -1,23 +1,14 @@
 import { PenLine } from "lucide-react"
 import { Link } from "react-router-dom"
 import { Button } from "./ui/button"
+import { useAuth } from "@/contexts/AuthContext"
+ 
+export function Header() {
+  const { user, logout } = useAuth()
 
-interface HeaderProps {
-  isAuthenticated?: boolean
-  currentUser?: {
-    id: string
-    name: string
-  }
-  onLogout?: () => void
-}
 
-export function Header({ 
-  isAuthenticated = false, 
-  currentUser,
-  onLogout 
-}: HeaderProps) {
   return (
-    <header className="border-b border-border/50 bg-background/80 backdrop-blur-sm sticky top-0 z-50">
+    <header className="border-b border-border/50 bg-background/80 backdrop-blur-sm sticky top-0">
       <nav className="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
         <div className="flex items-center gap-8">
           <Link 
@@ -35,7 +26,7 @@ export function Header({
         </div>
 
         <div className="flex items-center gap-4">
-          {isAuthenticated ? (
+          {user?.id ? (
             <>
               <Button variant="ghost" size="sm" className="gap-2" asChild>
                 <Link to="/new">
@@ -44,12 +35,12 @@ export function Header({
                 </Link>
               </Button>
               <Link
-                to={`/profile/${currentUser?.id}`}
+                to={`/profile/${user?.id}`}
                 className="text-sm text-muted-foreground hover:text-foreground transition-colors"
               >
-                {currentUser?.name}
+                {user?.name}
               </Link>
-              <Button variant="ghost" size="sm" onClick={onLogout}>
+              <Button variant="ghost" size="sm" onClick={logout}>
                 Log out
               </Button>
             </>
