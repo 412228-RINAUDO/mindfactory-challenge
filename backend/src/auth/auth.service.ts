@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
+import { AuthResponseDto } from './dto/auth-response.dto';
 import { EmailAlreadyExistsException } from '../common/exceptions/email-already-exists.exception';
 import { InvalidCredentialsException } from '../common/exceptions/invalid-credentials.exception';
 
@@ -16,7 +17,7 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signIn(data: LoginDto): Promise<{ access_token: string }> {
+  async signIn(data: LoginDto): Promise<AuthResponseDto> {
     this.logger.log(`Login attempt for email: ${data.email}`);
 
     const user = await this.usersService.findByEmail(data.email);
@@ -34,13 +35,12 @@ export class AuthService {
     this.logger.log(`Successful login: ${user.email}, userId: ${user.id}`);
 
     const payload = { sub: user.id, email: user.email };
+    const accessToken = await this.jwtService.signAsync(payload);
 
-    return {
-      access_token: await this.jwtService.signAsync(payload),
-    };
+    return new AuthResponseDto(user, accessToken);
   }
 
-  async register(data: RegisterDto) {
+  async register(data: RegisterDto): Promise<AuthResponseDto> {
     this.logger.log(`Registration attempt for email: ${data.email}`);
 
     const existingUser = await this.usersService.findByEmail(data.email);
@@ -57,9 +57,8 @@ export class AuthService {
     this.logger.log(`Successful registration: ${user.email}, userId: ${user.id}`);
     
     const payload = { sub: user.id, email: user.email };
+    const accessToken = await this.jwtService.signAsync(payload);
 
-    return {
-      access_token: await this.jwtService.signAsync(payload),
-    };
+    return new AuthResponseDto(user, accessToken);
   }
 }
