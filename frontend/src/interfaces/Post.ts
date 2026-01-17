@@ -1,10 +1,23 @@
+export interface User {
+  id: string
+  name: string
+  email: string
+}
+
 export interface Post {
   id: string
   title: string
-  excerpt: string
-  authorId: string
-  authorName: string
+  content: string
+  user: User
   createdAt: string
-  likes: string[]
-  commentsCount: number
+}
+
+export interface PostsResponse {
+  data: Post[]
+  meta: {
+    page: number
+    pageItems: number
+    total: number
+    totalPages: number
+  }
 }

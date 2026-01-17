@@ -2,46 +2,15 @@ import { Link } from "react-router-dom"
 import { PenLine } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { PostCard } from "@/components/PostCard"
-import type { Post } from "@/interfaces/Post"
-
-const mockPosts: Post[] = [
-  {
-    id: "1",
-    title: "The Future of Design Systems",
-    excerpt: "Exploring how design systems are evolving to meet the needs of modern web applications and the tools that make them possible.",
-    authorId: "user1",
-    authorName: "Sarah Chen",
-    createdAt: "2024-01-15T10:00:00Z",
-    likes: ["1", "2", "3"],
-    commentsCount: 5
-  },
-  {
-    id: "2",
-    title: "Building Better User Experiences",
-    excerpt: "A deep dive into the principles of user-centered design and how to apply them in your next project.",
-    authorId: "user2",
-    authorName: "Alex Rivera",
-    createdAt: "2024-01-14T15:30:00Z",
-    likes: ["1", "2"],
-    commentsCount: 3
-  },
-  {
-    id: "3",
-    title: "The Art of Minimalism in Web Design",
-    excerpt: "Less is more. Discover how minimalist design principles can create powerful and memorable user experiences.",
-    authorId: "user3",
-    authorName: "Jordan Lee",
-    createdAt: "2024-01-13T09:15:00Z",
-    likes: ["1"],
-    commentsCount: 8
-  }
-]
+import { usePosts } from "@/hooks/usePosts"
 
 interface PostsPageProps {
   isAuthenticated?: boolean
 }
 
 export function PostsPage({ isAuthenticated = false }: PostsPageProps) {
+  const { data: response, isLoading, error } = usePosts()
+
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
       <section className="mb-16">
@@ -65,11 +34,26 @@ export function PostsPage({ isAuthenticated = false }: PostsPageProps) {
         <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-8">
           Recent Posts
         </h2>
-        <div className="space-y-6">
-          {mockPosts.map((post) => (
-            <PostCard key={post.id} post={post} />
-          ))}
-        </div>
+        
+        {isLoading && (
+          <div className="text-center py-12 text-muted-foreground">
+            Loading posts...
+          </div>
+        )}
+        
+        {error && (
+          <div className="text-center py-12 text-destructive">
+            Error loading posts: {error.message}
+          </div>
+        )}
+        
+        {response?.data && (
+          <div className="space-y-6">
+            {response.data.map((post) => (
+              <PostCard key={post.id} post={post} />
+            ))}
+          </div>
+        )}
       </section>
     </div>
   )
