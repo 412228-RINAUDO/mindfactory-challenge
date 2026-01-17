@@ -47,6 +47,7 @@ describe('Auth (e2e)', () => {
           expect(res.body.user).toHaveProperty('id');
           expect(res.body.user).toHaveProperty('name', 'Test User');
           expect(res.body.user).toHaveProperty('email', 'test@example.com');
+          expect(res.body.user).toHaveProperty('created_at');
         });
     });
 
@@ -110,6 +111,7 @@ describe('Auth (e2e)', () => {
           expect(res.body.user).toHaveProperty('id');
           expect(res.body.user).toHaveProperty('name', 'Test User');
           expect(res.body.user).toHaveProperty('email', 'test@example.com');
+          expect(res.body.user).toHaveProperty('created_at');
         });
     });
 
