@@ -1,4 +1,5 @@
 export class AuthUserDto {
+  id: string;
   name: string;
   email: string;
 }
@@ -9,6 +10,7 @@ export class AuthResponseDto {
 
   constructor(user: AuthUserDto, accessToken: string) {
     this.user = {
+      id: user.id,
       name: user.name,
       email: user.email,
     };
