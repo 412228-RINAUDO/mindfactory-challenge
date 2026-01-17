@@ -1,0 +1,70 @@
+import { PenLine } from "lucide-react"
+import { Link } from "react-router-dom"
+import { Button } from "./ui/button"
+
+interface HeaderProps {
+  isAuthenticated?: boolean
+  currentUser?: {
+    id: string
+    name: string
+  }
+  onLogout?: () => void
+}
+
+export function Header({ 
+  isAuthenticated = false, 
+  currentUser,
+  onLogout 
+}: HeaderProps) {
+  return (
+    <header className="border-b border-border/50 bg-background/80 backdrop-blur-sm sticky top-0 z-50">
+      <nav className="max-w-4xl mx-auto px-6 h-16 flex items-center justify-between">
+        <div className="flex items-center gap-8">
+          <Link 
+            to="/" 
+            className="font-semibold text-lg tracking-tight hover:text-primary transition-colors"
+          >
+            Writespace
+          </Link>
+          <Link
+            to="/"
+            className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:block"
+          >
+            Posts
+          </Link>
+        </div>
+
+        <div className="flex items-center gap-4">
+          {isAuthenticated ? (
+            <>
+              <Button variant="ghost" size="sm" className="gap-2" asChild>
+                <Link to="/new">
+                  <PenLine className="h-4 w-4" />
+                  <span className="hidden sm:inline">Write</span>
+                </Link>
+              </Button>
+              <Link
+                to={`/profile/${currentUser?.id}`}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                {currentUser?.name}
+              </Link>
+              <Button variant="ghost" size="sm" onClick={onLogout}>
+                Log out
+              </Button>
+            </>
+          ) : (
+            <>
+              <Button variant="ghost" size="sm" asChild>
+                <Link to="/login">Log in</Link>
+              </Button>
+              <Button size="sm" asChild>
+                <Link to="/register">Sign up</Link>
+              </Button>
+            </>
+          )}
+        </div>
+      </nav>
+    </header>
+  )
+}
