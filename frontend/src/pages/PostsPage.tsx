@@ -3,12 +3,10 @@ import { PenLine } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { PostCard } from "@/components/PostCard"
 import { usePosts } from "@/hooks/usePosts"
+import { useAuth } from "@/contexts/AuthContext"
 
-interface PostsPageProps {
-  isAuthenticated?: boolean
-}
-
-export function PostsPage({ isAuthenticated = false }: PostsPageProps) {
+export function PostsPage() {
+  const { user } = useAuth()
   const { data: response, isLoading, error } = usePosts()
 
   return (
@@ -20,7 +18,7 @@ export function PostsPage({ isAuthenticated = false }: PostsPageProps) {
         <p className="text-lg text-muted-foreground mb-8 max-w-xl">
           A space for writers and thinkers to share their perspectives on design, technology, and creativity.
         </p>
-        {!isAuthenticated && (
+        {!user?.id && (
           <Button size="lg" className="gap-2" asChild>
             <Link to="/login">
               <PenLine className="h-4 w-4" />

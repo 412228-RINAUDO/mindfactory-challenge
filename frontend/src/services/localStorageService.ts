@@ -1,5 +1,4 @@
 export const localStorageService = {
-  // Get item (con parsing automático)
   get: <T>(key: string): T | null => {
     try {
       const item = localStorage.getItem(key)
@@ -10,7 +9,6 @@ export const localStorageService = {
     }
   },
 
-  // Set item (con stringify automático)
   set: <T>(key: string, value: T): void => {
     try {
       localStorage.setItem(key, JSON.stringify(value))
@@ -19,26 +17,11 @@ export const localStorageService = {
     }
   },
 
-  // Remove item
   remove: (key: string): void => {
     try {
       localStorage.removeItem(key)
     } catch (error) {
       console.error(`Error removing ${key} from localStorage:`, error)
     }
-  },
-
-  // Clear all
-  clear: (): void => {
-    try {
-      localStorage.clear()
-    } catch (error) {
-      console.error('Error clearing localStorage:', error)
-    }
-  },
-
-  // Check if key exists
-  has: (key: string): boolean => {
-    return localStorage.getItem(key) !== null
   },
 }
