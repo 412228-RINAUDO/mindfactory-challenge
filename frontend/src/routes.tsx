@@ -3,6 +3,7 @@ import { Layout } from "./components/Layout"
 import { PostsPage } from "./pages/PostsPage"
 import { PostDetailPage } from "./pages/PostDetailPage"
 import { CreatePostPage } from "./pages/CreatePostPage"
+import { EditPostPage } from "./pages/EditPostPage"
 import { LoginPage } from "./pages/LoginPage"
 import { SignUpPage } from "./pages/SignUpPage"
 import { ProfilePage } from "./pages/ProfilePage"
@@ -23,6 +24,10 @@ const router = createBrowserRouter([
       {
         path: "/posts/:id",
         element: <PostDetailPage />,
+      },
+      {
+        path: "/posts/:id/edit",
+        element: <EditPostPage />,
       },
       {
         path: "/login",
