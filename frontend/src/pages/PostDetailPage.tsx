@@ -1,6 +1,6 @@
 import { useParams, Link, useNavigate } from 'react-router-dom'
 import { ArrowLeft, Loader2, Pencil } from 'lucide-react'
-import { usePost } from '@/hooks/usePost'
+import { usePost } from '@/hooks/usePosts'
 import { formatDate } from '@/lib/formatDate'
 import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
@@ -66,7 +66,7 @@ export function PostDetailPage() {
               variant="outline"
               size="sm"
               className="gap-2 bg-transparent"
-              onClick={() => navigate(`/edit/${post.id}`)}
+              onClick={() => navigate(`/posts/${post.id}/edit`)}
             >
               <Pencil className="h-4 w-4" />
               Edit post
