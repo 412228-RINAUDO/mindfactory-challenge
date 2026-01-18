@@ -7,8 +7,7 @@ export async function apiClient<T>(
   endpoint: string,
   options?: RequestInit
 ): Promise<T> {
-  const token = localStorageService.get<AuthResponse>('user')?.token;
-  
+  const token = localStorageService.get<AuthResponse>('user')?.access_token;
   const response = await fetch(`${API_URL}${endpoint}`, {
     headers: {
       'Content-Type': 'application/json',
