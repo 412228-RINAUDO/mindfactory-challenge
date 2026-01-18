@@ -8,10 +8,6 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   
-  app.enableCors({
-    origin: 'http://localhost:5174',
-  });
-  
   app.setGlobalPrefix('api/v1');
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalPipes(
