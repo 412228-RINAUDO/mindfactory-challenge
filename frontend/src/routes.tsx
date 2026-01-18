@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import { Layout } from "./components/Layout"
 import { PostsPage } from "./pages/PostsPage"
 import { PostDetailPage } from "./pages/PostDetailPage"
+import { CreatePostPage } from "./pages/CreatePostPage"
 import { LoginPage } from "./pages/LoginPage"
 import { SignUpPage } from "./pages/SignUpPage"
 import { ProfilePage } from "./pages/ProfilePage"
@@ -14,6 +15,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <PostsPage />,
+      },
+      {
+        path: "/posts/create",
+        element: <CreatePostPage />,
       },
       {
         path: "/posts/:id",

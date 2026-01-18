@@ -35,7 +35,7 @@ export function Header() {
           {user?.id ? (
             <>
               <Button variant="ghost" size="sm" className="gap-2" asChild>
-                <Link to="/new">
+                <Link to="posts/create">
                   <PenLine className="h-4 w-4" />
                   <span className="hidden sm:inline">Write</span>
                 </Link>

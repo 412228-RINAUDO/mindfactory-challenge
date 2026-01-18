@@ -1,12 +1,17 @@
-import { useParams, Link } from 'react-router-dom'
-import { ArrowLeft, Loader2 } from 'lucide-react'
+import { useParams, Link, useNavigate } from 'react-router-dom'
+import { ArrowLeft, Loader2, Pencil } from 'lucide-react'
 import { usePost } from '@/hooks/usePost'
 import { formatDate } from '@/lib/formatDate'
 import { useEffect } from 'react'
+import { Button } from '@/components/ui/button'
+import { useAuth } from '@/contexts/AuthContext'
 
 export function PostDetailPage() {
   const { id } = useParams<{ id: string }>()
   const { data: post, isLoading, error } = usePost(id!)
+  const navigate = useNavigate()
+  const { user: currentUser } = useAuth()
+  const isOwner = currentUser?.id === post?.user.id
 
   useEffect(() => {
     window.scrollTo(0, 0)
@@ -47,22 +52,35 @@ export function PostDetailPage() {
         </h1>
         <div className="flex items-center justify-between flex-wrap gap-4">
           <div className="flex items-center gap-3 text-muted-foreground">
-            <Link 
+            <Link
               to={`/profile/${post.user.id}`}
               className="font-medium text-foreground hover:text-primary transition-colors"
             >
               {post.user.name}
             </Link>
             <span className="text-border">·</span>
-            <time dateTime={post.createdAt}>
-              {formatDate(post.createdAt)}
-            </time>
+            <time dateTime={post.created_at}>{formatDate(post.created_at)}</time>
           </div>
+          {isOwner && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="gap-2 bg-transparent"
+              onClick={() => navigate(`/edit/${post.id}`)}
+            >
+              <Pencil className="h-4 w-4" />
+              Edit post
+            </Button>
+          )}
         </div>
       </header>
 
       <div className="prose-content text-lg text-foreground/90 leading-relaxed">
-        {post.content}
+        {post.content.split("\n").map((paragraph, index) => (
+          <p key={index} className="mb-6">
+            {paragraph}
+          </p>
+        ))}
       </div>
     </article>
   )

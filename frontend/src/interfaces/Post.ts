@@ -9,7 +9,7 @@ export interface Post {
   title: string
   content: string
   user: UserPost
-  createdAt: string
+  created_at: string
 }
 
 export interface PostsResponse {

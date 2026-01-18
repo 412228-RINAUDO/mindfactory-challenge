@@ -36,8 +36,8 @@ export function PostCard({ post }: PostCardProps) {
             {post.user.name}
           </Link>
           <span className="text-border">·</span>
-          <time dateTime={post.createdAt}>
-            {formatDate(post.createdAt)}
+          <time dateTime={post.created_at}>
+            {formatDate(post.created_at)}
           </time>
         </div>
       </div>
