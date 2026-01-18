@@ -1,7 +1,7 @@
 import type { AuthResponse } from '@/interfaces/Auth'
 import { localStorageService } from '@/services/localStorageService'
 
-const API_URL = import.meta.env.VITE_API_URL
+const API_URL = "/api/v1"
 
 export async function apiClient<T>(
   endpoint: string,

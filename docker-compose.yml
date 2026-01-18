@@ -1,4 +1,10 @@
 services:
+  mindfactory-nginx:
+    build: ./frontend
+    ports:
+      - "3000:80"
+    restart: unless-stopped
+    container_name: mindfactory-frontend
   mindfactory-backend:
     build: ./backend
     container_name: mindfactory-backend
