@@ -60,7 +60,7 @@ describe('Users (e2e)', () => {
       expect(response.body).toHaveProperty('id', userId);
       expect(response.body).toHaveProperty('name', 'Test User');
       expect(response.body).toHaveProperty('email', 'test@example.com');
-      expect(response.body).toHaveProperty('createdAt');
+      expect(response.body).toHaveProperty('created_at');
       expect(response.body).not.toHaveProperty('password');
     });
 

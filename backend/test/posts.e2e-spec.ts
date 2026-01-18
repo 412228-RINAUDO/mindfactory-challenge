@@ -86,7 +86,7 @@ describe('Posts (e2e)', () => {
       expect(response.body.data[0].user).toHaveProperty('name', 'Test User');
       expect(response.body.data[0].user).toHaveProperty('email', 'test@example.com');
       expect(response.body.data[0].user).not.toHaveProperty('password');
-      expect(response.body.data[0]).toHaveProperty('createdAt');
+      expect(response.body.data[0]).toHaveProperty('created_at');
       
       // Check pagination meta
       expect(response.body.meta).toHaveProperty('page', 1);

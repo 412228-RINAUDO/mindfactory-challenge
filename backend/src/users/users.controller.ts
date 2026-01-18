@@ -4,6 +4,7 @@ import { UsersService } from './users.service';
 import { UserResponseDto } from './dto/user-response.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { AuthorizationService } from '../common/services/authorization.service';
+import { Public } from '../public/public.decorator';
 
 @Controller('users')
 export class UsersController {
@@ -12,6 +13,7 @@ export class UsersController {
     private readonly authorizationService: AuthorizationService,
   ) {}
 
+  @Public()
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<UserResponseDto> {
     const user = await this.usersService.findById(id);
