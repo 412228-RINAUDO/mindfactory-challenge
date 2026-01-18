@@ -37,7 +37,7 @@ export class UsersService {
 
     if (data.email) {
       const existingUser = await this.usersRepository.findByEmail(data.email);
-      if (existingUser) {
+      if (existingUser && existingUser.id !== id) {
         throw new EmailAlreadyExistsException();
       }
     }
