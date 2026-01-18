@@ -4,6 +4,8 @@ import { PostsPage } from "./pages/PostsPage"
 import { PostDetailPage } from "./pages/PostDetailPage"
 import { LoginPage } from "./pages/LoginPage"
 import { SignUpPage } from "./pages/SignUpPage"
+import { ProfilePage } from "./pages/ProfilePage"
+import { ProfileEditPage } from "./pages/ProfileEditPage"
 
 const router = createBrowserRouter([
   {
@@ -24,6 +26,14 @@ const router = createBrowserRouter([
       {
         path: "/register",
         element: <SignUpPage />,
+      },
+      {
+        path: "/profile/:id",
+        element: <ProfilePage />,
+      },
+      {
+        path: "/profile/:id/edit",
+        element: <ProfileEditPage />,
       },
     ],
   },
