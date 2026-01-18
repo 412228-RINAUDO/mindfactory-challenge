@@ -1,10 +1,16 @@
 import { PenLine } from "lucide-react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Button } from "./ui/button"
 import { useAuth } from "@/contexts/AuthContext"
  
 export function Header() {
   const { user, logout } = useAuth()
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    logout()
+    navigate('/')
+  }
 
 
   return (
@@ -40,7 +46,7 @@ export function Header() {
               >
                 {user?.name}
               </Link>
-              <Button variant="ghost" size="sm" onClick={logout}>
+              <Button variant="ghost" size="sm" onClick={handleLogout}>
                 Log out
               </Button>
             </>

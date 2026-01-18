@@ -70,12 +70,6 @@ export function LoginPage() {
           </Link>
         </p>
 
-        {/* Demo hint */}
-        <div className="mt-8 p-4 rounded-lg bg-secondary/30 border border-border/50">
-          <p className="text-xs text-muted-foreground text-center">
-            <span className="font-medium text-foreground/80">Demo mode:</span> Enter any email and password to log in
-          </p>
-        </div>
       </div>
     </div>
   )
