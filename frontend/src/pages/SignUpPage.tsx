@@ -37,6 +37,7 @@ export function SignUpPage() {
             <Label htmlFor="name">Name</Label>
             <Input
               id="name"
+              data-testid="signup-name-input"
               type="text"
               placeholder="Your name"
               value={name}
@@ -50,6 +51,7 @@ export function SignUpPage() {
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
+              data-testid="signup-email-input"
               type="email"
               placeholder="you@example.com"
               value={email}
@@ -63,6 +65,7 @@ export function SignUpPage() {
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"
+              data-testid="signup-password-input"
               type="password"
               placeholder="••••••••"
               value={password}
