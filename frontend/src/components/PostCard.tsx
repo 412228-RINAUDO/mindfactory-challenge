@@ -1,20 +1,19 @@
-import { Link, useNavigate } from "react-router-dom"
-import { ArrowRight } from "lucide-react"
-import type { Post } from "@/interfaces/Post"
-import { formatDate } from "@/lib/formatDate"
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowRight, Heart, MessageCircle } from "lucide-react";
+import type { Post } from "@/interfaces/Post";
+import { formatDate } from "@/lib/formatDate";
 
 interface PostCardProps {
-  post: Post
+  post: Post;
 }
 
-
 export function PostCard({ post }: PostCardProps) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   return (
     <article className="group p-6 rounded-xl border border-border/50 bg-card/30 hover:bg-card/50 hover:border-border transition-all duration-200">
-      <div 
-        className="block cursor-pointer" 
+      <div
+        className="block cursor-pointer"
         onClick={() => navigate(`/posts/${post.id}`)}
       >
         <div className="flex items-start justify-between gap-4 mb-3">
@@ -29,18 +28,26 @@ export function PostCard({ post }: PostCardProps) {
       </div>
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3 text-sm text-muted-foreground">
-          <Link 
-            to={`/profile/${post.user.id}`} 
+          <Link
+            to={`/profile/${post.user.id}`}
             className="hover:text-foreground transition-colors"
           >
             {post.user.name}
           </Link>
           <span className="text-border">·</span>
-          <time dateTime={post.created_at}>
-            {formatDate(post.created_at)}
-          </time>
+          <time dateTime={post.created_at}>{formatDate(post.created_at)}</time>
+        </div>
+        <div className="flex items-center gap-4 text-sm text-muted-foreground">
+          <span className="flex items-center gap-1.5">
+            <Heart className="h-4 w-4" />
+            {post.likesCount}
+          </span>
+          <span className="flex items-center gap-1.5">
+            <MessageCircle className="h-4 w-4" />
+            {post.comments?.length ?? 0}
+          </span>
         </div>
       </div>
     </article>
-  )
+  );
 }

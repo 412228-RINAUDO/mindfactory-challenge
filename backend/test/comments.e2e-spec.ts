@@ -61,14 +61,13 @@ describe('Comments (e2e)', () => {
     postId = postResponse.body.id;
   });
 
-  describe('POST /comments', () => {
+  describe('POST /posts/:postId/comments', () => {
     it('should create comment successfully', async () => {
       const response = await request(app.getHttpServer())
-        .post('/comments')
+        .post(`/posts/${postId}/comments`)
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           content: 'Test Comment',
-          postId: postId,
         })
         .expect(201);
 
@@ -85,51 +84,32 @@ describe('Comments (e2e)', () => {
 
     it('should fail without authentication', () => {
       return request(app.getHttpServer())
-        .post('/comments')
+        .post(`/posts/${postId}/comments`)
         .send({
           content: 'Test Comment',
-          postId: postId,
         })
         .expect(401);
     });
 
     it('should fail without content', () => {
       return request(app.getHttpServer())
-        .post('/comments')
+        .post(`/posts/${postId}/comments`)
         .set('Authorization', `Bearer ${authToken}`)
-        .send({
-          postId: postId,
-        })
+        .send({})
         .expect(400)
         .expect((res) => {
           expect(res.body.message).toEqual(
             expect.arrayContaining([expect.stringContaining('content')]),
-          );
-        });
-    });
-
-    it('should fail without postId', () => {
-      return request(app.getHttpServer())
-        .post('/comments')
-        .set('Authorization', `Bearer ${authToken}`)
-        .send({
-          content: 'Test Comment',
-        })
-        .expect(400)
-        .expect((res) => {
-          expect(res.body.message).toEqual(
-            expect.arrayContaining([expect.stringContaining('postId')]),
           );
         });
     });
 
     it('should fail with empty content', () => {
       return request(app.getHttpServer())
-        .post('/comments')
+        .post(`/posts/${postId}/comments`)
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           content: '',
-          postId: postId,
         })
         .expect(400)
         .expect((res) => {
@@ -139,168 +119,19 @@ describe('Comments (e2e)', () => {
         });
     });
 
-    it('should fail with invalid postId', () => {
-      return request(app.getHttpServer())
-        .post('/comments')
-        .set('Authorization', `Bearer ${authToken}`)
-        .send({
-          content: 'Test Comment',
-          postId: 'invalid-uuid',
-        })
-        .expect(400)
-        .expect((res) => {
-          expect(res.body.message).toEqual(
-            expect.arrayContaining([expect.stringContaining('postId')]),
-          );
-        });
-    });
-
     it('should fail when post does not exist', () => {
       const nonExistentId = '00000000-0000-0000-0000-000000000000';
 
       return request(app.getHttpServer())
-        .post('/comments')
+        .post(`/posts/${nonExistentId}/comments`)
         .set('Authorization', `Bearer ${authToken}`)
         .send({
           content: 'Test Comment',
-          postId: nonExistentId,
         })
         .expect(404)
         .expect((res) => {
           expect(res.body).toHaveProperty('errorCode', 'POST_NOT_FOUND');
         });
-    });
-  });
-
-  describe('GET /comments/post/:postId', () => {
-    it('should get all comments for a post with user information', async () => {
-      // Create a comment first
-      await request(app.getHttpServer())
-        .post('/comments')
-        .set('Authorization', `Bearer ${authToken}`)
-        .send({
-          content: 'Test Comment',
-          postId: postId,
-        });
-
-      const response = await request(app.getHttpServer())
-        .get(`/comments/post/${postId}`)
-        .expect(200);
-
-      expect(response.body).toHaveProperty('data');
-      expect(response.body).toHaveProperty('meta');
-      expect(Array.isArray(response.body.data)).toBe(true);
-      expect(response.body.data).toHaveLength(1);
-      expect(response.body.data[0]).toHaveProperty('id');
-      expect(response.body.data[0]).toHaveProperty('content', 'Test Comment');
-      expect(response.body.data[0]).toHaveProperty('post_id', postId);
-      expect(response.body.data[0]).toHaveProperty('user');
-      expect(response.body.data[0].user).toHaveProperty('name', 'Test User');
-      expect(response.body.data[0].user).not.toHaveProperty('password');
-      expect(response.body.data[0]).toHaveProperty('created_at');
-
-      // Check pagination meta
-      expect(response.body.meta).toHaveProperty('page', 1);
-      expect(response.body.meta).toHaveProperty('pageItems', 10);
-      expect(response.body.meta).toHaveProperty('total', 1);
-      expect(response.body.meta).toHaveProperty('totalPages', 1);
-    });
-
-    it('should return empty array when no comments exist', async () => {
-      const response = await request(app.getHttpServer())
-        .get(`/comments/post/${postId}`)
-        .expect(200);
-
-      expect(response.body).toHaveProperty('data');
-      expect(response.body).toHaveProperty('meta');
-      expect(Array.isArray(response.body.data)).toBe(true);
-      expect(response.body.data).toHaveLength(0);
-      expect(response.body.meta.total).toBe(0);
-    });
-
-    it('should return comments ordered by createdAt desc', async () => {
-      // Create multiple comments
-      await request(app.getHttpServer())
-        .post('/comments')
-        .set('Authorization', `Bearer ${authToken}`)
-        .send({ content: 'First Comment', postId: postId });
-
-      // Small delay to ensure different timestamps
-      await new Promise(resolve => setTimeout(resolve, 10));
-
-      await request(app.getHttpServer())
-        .post('/comments')
-        .set('Authorization', `Bearer ${authToken}`)
-        .send({ content: 'Second Comment', postId: postId });
-
-      const response = await request(app.getHttpServer())
-        .get(`/comments/post/${postId}`)
-        .expect(200);
-
-      expect(response.body.data).toHaveLength(2);
-      expect(response.body.data[0].content).toBe('Second Comment');
-      expect(response.body.data[1].content).toBe('First Comment');
-    });
-
-    it('should work without authentication (public endpoint)', async () => {
-      await request(app.getHttpServer())
-        .post('/comments')
-        .set('Authorization', `Bearer ${authToken}`)
-        .send({
-          content: 'Test Comment',
-          postId: postId,
-        });
-
-      const response = await request(app.getHttpServer())
-        .get(`/comments/post/${postId}`)
-        .expect(200);
-
-      expect(response.body.data).toHaveLength(1);
-    });
-
-    it('should fail when post does not exist', () => {
-      const nonExistentId = '00000000-0000-0000-0000-000000000000';
-
-      return request(app.getHttpServer())
-        .get(`/comments/post/${nonExistentId}`)
-        .expect(404)
-        .expect((res) => {
-          expect(res.body).toHaveProperty('errorCode', 'POST_NOT_FOUND');
-        });
-    });
-
-    it('should use default pagination values', async () => {
-      await request(app.getHttpServer())
-        .post('/comments')
-        .set('Authorization', `Bearer ${authToken}`)
-        .send({ content: 'Test Comment', postId: postId });
-
-      const response = await request(app.getHttpServer())
-        .get(`/comments/post/${postId}`)
-        .expect(200);
-
-      expect(response.body.meta.page).toBe(1);
-      expect(response.body.meta.pageItems).toBe(10);
-    });
-
-    it('should support custom pagination', async () => {
-      // Create multiple comments
-      for (let i = 0; i < 15; i++) {
-        await request(app.getHttpServer())
-          .post('/comments')
-          .set('Authorization', `Bearer ${authToken}`)
-          .send({ content: `Comment ${i}`, postId: postId });
-      }
-
-      const response = await request(app.getHttpServer())
-        .get(`/comments/post/${postId}?page=2&pageItems=5`)
-        .expect(200);
-
-      expect(response.body.data).toHaveLength(5);
-      expect(response.body.meta.page).toBe(2);
-      expect(response.body.meta.pageItems).toBe(5);
-      expect(response.body.meta.total).toBe(15);
-      expect(response.body.meta.totalPages).toBe(3);
     });
   });
 });

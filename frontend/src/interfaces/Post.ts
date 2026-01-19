@@ -1,3 +1,5 @@
+import type { Comment } from "./Comment"
+
 export interface UserPost {
   id: string
   name: string
@@ -10,6 +12,8 @@ export interface Post {
   content: string
   user: UserPost
   created_at: string
+  likesCount?: number
+  comments: Comment[]
 }
 
 export interface PostsResponse {

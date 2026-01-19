@@ -82,6 +82,8 @@ describe('Posts (e2e)', () => {
       expect(response.body.data[0]).toHaveProperty('id');
       expect(response.body.data[0]).toHaveProperty('title', 'Test Post');
       expect(response.body.data[0]).toHaveProperty('content', 'Test Content');
+      expect(response.body.data[0]).toHaveProperty('likes_count', 0);
+      expect(response.body.data[0]).toHaveProperty('comments_count', 0);
       expect(response.body.data[0]).toHaveProperty('user');
       expect(response.body.data[0].user).toHaveProperty('name', 'Test User');
       expect(response.body.data[0].user).toHaveProperty(
@@ -90,6 +92,7 @@ describe('Posts (e2e)', () => {
       );
       expect(response.body.data[0].user).not.toHaveProperty('password');
       expect(response.body.data[0]).toHaveProperty('created_at');
+      expect(response.body.data[0]).not.toHaveProperty('comments');
 
       // Check pagination meta
       expect(response.body.meta).toHaveProperty('page', 1);
@@ -150,7 +153,7 @@ describe('Posts (e2e)', () => {
   });
 
   describe('GET /posts/:id', () => {
-    it('should get post by id with user information', async () => {
+    it('should get post by id with user information and comments', async () => {
       const createResponse = await request(app.getHttpServer())
         .post('/posts')
         .set('Authorization', `Bearer ${authToken}`)
@@ -160,6 +163,14 @@ describe('Posts (e2e)', () => {
         });
 
       const postId = createResponse.body.id;
+
+      // Create a comment
+      await request(app.getHttpServer())
+        .post(`/posts/${postId}/comments`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          content: 'Test Comment',
+        });
 
       const response = await request(app.getHttpServer())
         .get(`/posts/${postId}`)
@@ -171,6 +182,14 @@ describe('Posts (e2e)', () => {
       expect(response.body).toHaveProperty('user');
       expect(response.body.user).toHaveProperty('name', 'Test User');
       expect(response.body.user).not.toHaveProperty('password');
+      
+      // Verify comments are included
+      expect(response.body).toHaveProperty('comments');
+      expect(Array.isArray(response.body.comments)).toBe(true);
+      expect(response.body.comments).toHaveLength(1);
+      expect(response.body.comments[0]).toHaveProperty('content', 'Test Comment');
+      expect(response.body.comments[0]).toHaveProperty('user');
+      expect(response.body.comments[0].user).toHaveProperty('name', 'Test User');
     });
 
     it('should fail when post does not exist', () => {
@@ -269,6 +288,23 @@ describe('Posts (e2e)', () => {
           expect(res.body.message).toEqual(
             expect.arrayContaining([expect.stringContaining('content')]),
           );
+        });
+    });
+
+    it('should fail when user does not exist', async () => {
+      // Delete the user to simulate non-existent user
+      await prisma.user.delete({ where: { id: userId } });
+
+      return request(app.getHttpServer())
+        .post('/posts')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          title: 'New Post',
+          content: 'New Content',
+        })
+        .expect(404)
+        .expect((res) => {
+          expect(res.body).toHaveProperty('errorCode', 'USER_NOT_FOUND');
         });
     });
   });
@@ -402,6 +438,22 @@ describe('Posts (e2e)', () => {
           );
         });
     });
+
+    it('should fail when post does not exist for update', () => {
+      const nonExistentId = '00000000-0000-0000-0000-000000000000';
+
+      return request(app.getHttpServer())
+        .put(`/posts/${nonExistentId}`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          title: 'Updated Title',
+          content: 'Updated Content',
+        })
+        .expect(404)
+        .expect((res) => {
+          expect(res.body).toHaveProperty('errorCode', 'POST_NOT_FOUND');
+        });
+    });
   });
   describe('PATCH /posts/:id/like', () => {
     it('should increment likes count', async () => {
@@ -421,7 +473,7 @@ describe('Posts (e2e)', () => {
         .expect(200);
 
       expect(response.body).toHaveProperty('id', postId);
-      expect(response.body).toHaveProperty('likesCount', 1);
+      expect(response.body).toHaveProperty('likes_count', 1);
     });
 
     it('should increment likes multiple times', async () => {
@@ -445,7 +497,7 @@ describe('Posts (e2e)', () => {
         .set('Authorization', `Bearer ${authToken}`)
         .expect(200);
 
-      expect(response.body.likesCount).toBe(2);
+      expect(response.body.likes_count).toBe(2);
     });
 
     it('should fail when post does not exist', () => {
@@ -498,7 +550,7 @@ describe('Posts (e2e)', () => {
         .expect(200);
 
       expect(response.body).toHaveProperty('id', postId);
-      expect(response.body).toHaveProperty('likesCount', 0);
+      expect(response.body).toHaveProperty('likes_count', 0);
     });
 
     it('should fail when trying to unlike a post with 0 likes', async () => {

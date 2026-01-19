@@ -15,26 +15,17 @@ export class CommentsService {
 
   async create(
     userId: string,
+    postId: string,
     createCommentDto: CreateCommentDto,
   ): Promise<CommentResponseDto> {
-    await this.postsService.findById(createCommentDto.postId);
+    await this.postsService.findById(postId);
 
     const comment = await this.commentsRepository.create({
       content: createCommentDto.content,
       userId,
-      postId: createCommentDto.postId,
+      postId,
     });
 
     return new CommentResponseDto(comment);
-  }
-
-  async findByPostId(postId: string, page: number, pageItems: number) {
-    await this.postsService.findById(postId);
-
-    const { data, total } = await this.commentsRepository.findByPostId(postId, page, pageItems);
-    
-    const commentsDto = data.map((comment) => new CommentResponseDto(comment));
-
-    return { commentsDto, total };
   }
 }

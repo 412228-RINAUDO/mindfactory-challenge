@@ -20,7 +20,7 @@ export function PostsPage() {
         <p className="text-lg text-muted-foreground mb-8 max-w-xl">
           Un espacio para escritores y pensadores que comparten sus perspectivas sobre diseño, tecnología y creatividad.
         </p>
-        {!user?.id && (
+        {!user?.id && !isLoading && (
           <Button size="lg" className="gap-2" asChild>
             <Link to="/login">
               <PenLine className="h-4 w-4" />
@@ -39,11 +39,24 @@ export function PostsPage() {
         
         {error && <ErrorState message="Error al cargar los posts" />}
         
-        {response?.data && (
+        {response?.data && response.data.length > 0 && (
           <div className="space-y-6">
             {response.data.map((post) => (
               <PostCard key={post.id} post={post} />
             ))}
+          </div>
+        )}
+
+        {response?.data && response.data.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-muted-foreground text-lg mb-2">
+              No hay publicaciones todavía
+            </p>
+            <p className="text-muted-foreground text-sm">
+              {user?.id 
+                ? "Sé el primero en compartir algo" 
+                : "Inicia sesión para crear la primera publicación"}
+            </p>
           </div>
         )}
       </section>

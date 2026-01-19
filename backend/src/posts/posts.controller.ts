@@ -13,6 +13,7 @@ import {
 import type { AuthenticatedRequest } from '../common/types/authenticated-request.interface';
 import { PostsService } from './posts.service';
 import { PostResponseDto } from './dto/post-response.dto';
+import { PostDetailResponseDto } from './dto/post-detail-response.dto';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Public } from '../public/public.decorator';
@@ -44,9 +45,9 @@ export class PostsController {
 
   @Get(':id')
   @Public()
-  async findOne(@Param('id') id: string): Promise<PostResponseDto> {
+  async findOne(@Param('id') id: string): Promise<PostDetailResponseDto> {
     const post = await this.postsService.findById(id);
-    return new PostResponseDto(post);
+    return new PostDetailResponseDto(post);
   }
 
   @Post()
