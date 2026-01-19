@@ -9,7 +9,7 @@ import { BackLink } from "@/components/BackLink"
 import { useAuth } from "@/contexts/AuthContext"
 import { useUser, useUpdateUser } from "@/hooks/useUser"
 
-export function ProfileEditPage() {
+export function EditProfilePage() {
   const { user: currentUser } = useAuth()
   const navigate = useNavigate()
   const { data: user, isLoading } = useUser(currentUser?.id)

@@ -2,9 +2,9 @@ import { Navigate, Outlet } from 'react-router-dom';
 import { useAuth } from '@/contexts/AuthContext';
 
 export function PrivateRoutes() {
-  const { user } = useAuth();
+  const { user, isLoading } = useAuth();
   
-  if (!user) {
+  if (!user?.id && !isLoading) {
     return <Navigate to="/login" replace />;
   }
 

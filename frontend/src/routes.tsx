@@ -8,7 +8,8 @@ import { EditPostPage } from "./pages/EditPostPage"
 import { LoginPage } from "./pages/LoginPage"
 import { SignUpPage } from "./pages/SignUpPage"
 import { ProfilePage } from "./pages/ProfilePage"
-import { ProfileEditPage } from "./pages/ProfileEditPage"
+import { EditProfilePage } from "./pages/EditProfilePage"
+import { NotFoundPage } from "./pages/NotFoundPage"
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
       {
         path: "/posts/:id",
         element: <PostDetailPage />,
+      },
+      {
+        path: "/profile/:id",
+        element: <ProfilePage />,
       },
       {
         path: "/login",
@@ -42,14 +47,14 @@ const router = createBrowserRouter([
             element: <EditPostPage />,
           },
           {
-            path: "/profile/:id",
-            element: <ProfilePage />,
-          },
-          {
             path: "/profile/:id/edit",
-            element: <ProfileEditPage />,
+            element: <EditProfilePage />,
           },
         ],
+      },
+      {
+        path: "*",
+        element: <NotFoundPage />,
       },
     ],
   },

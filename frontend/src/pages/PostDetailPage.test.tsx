@@ -165,7 +165,7 @@ describe('PostDetailPage', () => {
         </BrowserRouter>
       )
 
-      screen.getByText('Jan 15, 2024')
+      screen.getByText('15 ene 2024')
     })
 
     it('should render "All posts" back link', () => {

@@ -128,7 +128,7 @@ describe('ProfilePage', () => {
         </BrowserRouter>
       )
 
-      screen.getByText('Se unió el Jan 15, 2024')
+      screen.getByText('Se unió el 15 ene 2024')
     })
 
     it('should render "All posts" back link', () => {
