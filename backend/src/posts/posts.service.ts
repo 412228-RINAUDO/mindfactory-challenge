@@ -1,12 +1,11 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import type { IPostsRepository } from './posts.repository.interface';
 import { POSTS_REPOSITORY } from './posts.tokens';
 import { PostNotFoundException } from '../common/exceptions/post-not-found.exception';
+import { CannotRemoveLikeException } from '../common/exceptions/cannot-remove-like.exception';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { Post, User } from '../../generated/prisma/client';
-import { PaginationDto } from '../common/dto/pagination.dto';
-import { DEFAULT_PAGE, DEFAULT_PAGE_ITEMS } from '../constants';
 import { PostResponseDto } from './dto/post-response.dto';
 
 @Injectable()
@@ -16,15 +15,12 @@ export class PostsService {
     private readonly postsRepository: IPostsRepository,
   ) {}
 
-  async findAll(paginationDto: PaginationDto) {
-    const { page = DEFAULT_PAGE, pageItems = DEFAULT_PAGE_ITEMS } =
-      paginationDto;
-
+  async findAll(page: number, pageItems: number) {
     const { data, total } = await this.postsRepository.findAll(page, pageItems);
 
     const postsDto = data.map((post) => new PostResponseDto(post));
 
-    return { postsDto, total, page, pageItems };
+    return { postsDto, total };
   }
 
   async findById(id: string) {
@@ -46,5 +42,20 @@ export class PostsService {
 
   async update(postId: string, data: UpdatePostDto) {
     return this.postsRepository.update(postId, data);
+  }
+
+  async incrementLikes(postId: string) {
+    await this.findById(postId);
+    return this.postsRepository.incrementLikes(postId);
+  }
+
+  async decrementLikes(postId: string) {
+    const post = await this.findById(postId);
+    
+    if (post.likesCount === 0) {
+      throw new CannotRemoveLikeException();
+    }
+    
+    return this.postsRepository.decrementLikes(postId);
   }
 }

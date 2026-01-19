@@ -8,7 +8,6 @@ export class PaginationMetaDto {
 
   @IsInt()
   @Min(1)
-  @Expose({ name: 'page_items' })
   pageItems: number;
 
   @IsInt()
@@ -17,7 +16,6 @@ export class PaginationMetaDto {
 
   @IsInt()
   @Min(0)
-  @Expose({ name: 'total_pages' })
   totalPages: number;
 
   constructor(page: number, pageItems: number, total: number) {

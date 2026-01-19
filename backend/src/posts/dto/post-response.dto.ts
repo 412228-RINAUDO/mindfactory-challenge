@@ -5,6 +5,7 @@ export class PostResponseDto {
   id: string;
   title: string;
   content: string;
+  likesCount: number;
   user: PostUserResponseDto;
   created_at: Date;
 
@@ -12,6 +13,7 @@ export class PostResponseDto {
     this.id = post.id;
     this.title = post.title;
     this.content = post.content;
+    this.likesCount = post.likesCount;
     this.user = new PostUserResponseDto(post.user);
     this.created_at = post.createdAt;
   }

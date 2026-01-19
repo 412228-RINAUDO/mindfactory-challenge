@@ -43,4 +43,28 @@ export class PostsRepository implements IPostsRepository {
       include: { user: true },
     });
   }
+
+  async incrementLikes(id: string) {
+    return this.prisma.post.update({
+      where: { id },
+      data: {
+        likesCount: {
+          increment: 1,
+        },
+      },
+      include: { user: true },
+    });
+  }
+
+  async decrementLikes(id: string) {
+    return this.prisma.post.update({
+      where: { id },
+      data: {
+        likesCount: {
+          decrement: 1,
+        },
+      },
+      include: { user: true },
+    });
+  }
 }

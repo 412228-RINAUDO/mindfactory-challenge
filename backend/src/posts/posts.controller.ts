@@ -3,7 +3,9 @@ import {
   Get,
   Post,
   Put,
+  Patch,
   Param,
+  ParseIntPipe,
   Body,
   Req,
   Query,
@@ -16,7 +18,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { Public } from '../public/public.decorator';
 import { AuthorizationService } from '../common/services/authorization.service';
 import { PaginatedResponseDto } from '../common/dto/paginated-response.dto';
-import { PaginationDto } from '../common/dto/pagination.dto';
+import { DEFAULT_PAGE, DEFAULT_PAGE_ITEMS } from '../constants';
 
 @Controller('posts')
 export class PostsController {
@@ -28,12 +30,16 @@ export class PostsController {
   @Get()
   @Public()
   async findAll(
-    @Query() paginationDto: PaginationDto,
+    @Query('page', new ParseIntPipe({ optional: true })) page?: number,
+    @Query('pageItems', new ParseIntPipe({ optional: true })) pageItems?: number,
   ): Promise<PaginatedResponseDto<PostResponseDto>> {
-    const { postsDto, total, page, pageItems } =
-      await this.postsService.findAll(paginationDto);
+    const finalPage = page || DEFAULT_PAGE;
+    const finalPageItems = pageItems || DEFAULT_PAGE_ITEMS;
+    
+    const { postsDto, total } =
+      await this.postsService.findAll(finalPage, finalPageItems);
 
-    return new PaginatedResponseDto(postsDto, { page, pageItems, total });
+    return new PaginatedResponseDto(postsDto, { page: finalPage, pageItems: finalPageItems, total });
   }
 
   @Get(':id')
@@ -63,5 +69,17 @@ export class PostsController {
 
     const updatedPost = await this.postsService.update(id, updatePostDto);
     return new PostResponseDto(updatedPost);
+  }
+
+  @Patch(':id/like')
+  async addLike(@Param('id') id: string): Promise<PostResponseDto> {
+    const post = await this.postsService.incrementLikes(id);
+    return new PostResponseDto(post);
+  }
+
+  @Patch(':id/unlike')
+  async removeLike(@Param('id') id: string): Promise<PostResponseDto> {
+    const post = await this.postsService.decrementLikes(id);
+    return new PostResponseDto(post);
   }
 }

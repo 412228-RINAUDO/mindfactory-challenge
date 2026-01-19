@@ -84,10 +84,13 @@ describe('Posts (e2e)', () => {
       expect(response.body.data[0]).toHaveProperty('content', 'Test Content');
       expect(response.body.data[0]).toHaveProperty('user');
       expect(response.body.data[0].user).toHaveProperty('name', 'Test User');
-      expect(response.body.data[0].user).toHaveProperty('email', 'test@example.com');
+      expect(response.body.data[0].user).toHaveProperty(
+        'email',
+        'test@example.com',
+      );
       expect(response.body.data[0].user).not.toHaveProperty('password');
       expect(response.body.data[0]).toHaveProperty('created_at');
-      
+
       // Check pagination meta
       expect(response.body.meta).toHaveProperty('page', 1);
       expect(response.body.meta).toHaveProperty('pageItems', 10);
@@ -115,7 +118,7 @@ describe('Posts (e2e)', () => {
         .send({ title: 'First Post', content: 'First Content' });
 
       // Small delay to ensure different timestamps
-      await new Promise(resolve => setTimeout(resolve, 10));
+      await new Promise((resolve) => setTimeout(resolve, 10));
 
       await request(app.getHttpServer())
         .post('/posts')
@@ -296,7 +299,7 @@ describe('Posts (e2e)', () => {
       expect(response.body).toHaveProperty('content', 'Updated Content');
     });
 
-    it('should fail when updating another user\'s post', async () => {
+    it("should fail when updating another user's post", async () => {
       const createResponse = await request(app.getHttpServer())
         .post('/posts')
         .set('Authorization', `Bearer ${authToken}`)
@@ -398,6 +401,155 @@ describe('Posts (e2e)', () => {
             expect.arrayContaining([expect.stringContaining('content')]),
           );
         });
+    });
+  });
+  describe('PATCH /posts/:id/like', () => {
+    it('should increment likes count', async () => {
+      const createResponse = await request(app.getHttpServer())
+        .post('/posts')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          title: 'Test Post',
+          content: 'Test Content',
+        });
+
+      const postId = createResponse.body.id;
+
+      const response = await request(app.getHttpServer())
+        .patch(`/posts/${postId}/like`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .expect(200);
+
+      expect(response.body).toHaveProperty('id', postId);
+      expect(response.body).toHaveProperty('likesCount', 1);
+    });
+
+    it('should increment likes multiple times', async () => {
+      const createResponse = await request(app.getHttpServer())
+        .post('/posts')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          title: 'Test Post',
+          content: 'Test Content',
+        });
+
+      const postId = createResponse.body.id;
+
+      await request(app.getHttpServer())
+        .patch(`/posts/${postId}/like`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .expect(200);
+
+      const response = await request(app.getHttpServer())
+        .patch(`/posts/${postId}/like`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .expect(200);
+
+      expect(response.body.likesCount).toBe(2);
+    });
+
+    it('should fail when post does not exist', () => {
+      const nonExistentId = '00000000-0000-0000-0000-000000000000';
+
+      return request(app.getHttpServer())
+        .patch(`/posts/${nonExistentId}/like`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .expect(404);
+    });
+
+    it('should fail without authentication', async () => {
+      const createResponse = await request(app.getHttpServer())
+        .post('/posts')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          title: 'Test Post',
+          content: 'Test Content',
+        });
+
+      const postId = createResponse.body.id;
+
+      return request(app.getHttpServer())
+        .patch(`/posts/${postId}/like`)
+        .expect(401);
+    });
+  });
+
+  describe('PATCH /posts/:id/unlike', () => {
+    it('should decrement likes count', async () => {
+      const createResponse = await request(app.getHttpServer())
+        .post('/posts')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          title: 'Test Post',
+          content: 'Test Content',
+        });
+
+      const postId = createResponse.body.id;
+
+      // Add a like first
+      await request(app.getHttpServer())
+        .patch(`/posts/${postId}/like`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .expect(200);
+
+      const response = await request(app.getHttpServer())
+        .patch(`/posts/${postId}/unlike`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .expect(200);
+
+      expect(response.body).toHaveProperty('id', postId);
+      expect(response.body).toHaveProperty('likesCount', 0);
+    });
+
+    it('should fail when trying to unlike a post with 0 likes', async () => {
+      const createResponse = await request(app.getHttpServer())
+        .post('/posts')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          title: 'Test Post',
+          content: 'Test Content',
+        });
+
+      const postId = createResponse.body.id;
+
+      return request(app.getHttpServer())
+        .patch(`/posts/${postId}/unlike`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .expect(400)
+        .expect((res) => {
+          expect(res.body).toHaveProperty('errorCode', 'CANNOT_REMOVE_LIKE');
+        });
+    });
+
+    it('should fail when post does not exist', () => {
+      const nonExistentId = '00000000-0000-0000-0000-000000000000';
+
+      return request(app.getHttpServer())
+        .patch(`/posts/${nonExistentId}/unlike`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .expect(404);
+    });
+
+    it('should fail without authentication', async () => {
+      const createResponse = await request(app.getHttpServer())
+        .post('/posts')
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          title: 'Test Post',
+          content: 'Test Content',
+        });
+
+      const postId = createResponse.body.id;
+
+      // Add a like first
+      await request(app.getHttpServer())
+        .patch(`/posts/${postId}/like`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .expect(200);
+
+      return request(app.getHttpServer())
+        .patch(`/posts/${postId}/unlike`)
+        .expect(401);
     });
   });
 });
