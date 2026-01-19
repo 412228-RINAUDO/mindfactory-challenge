@@ -1,6 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Heart, Pencil, Send } from "lucide-react";
-import { usePost, useCreateComment } from "@/hooks/usePosts";
+import { usePost, useCreateComment, useToggleLike } from "@/hooks/usePosts";
 import { formatDate } from "@/lib/formatDate";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,7 @@ export function PostDetailPage() {
   const isOwner = currentUser?.id === post?.user.id;
   const [newComment, setNewComment] = useState("");
   const { mutate: createComment, isPending: isCreatingComment } = useCreateComment();
+  const { mutate: toggleLike, isPending: isTogglingLike } = useToggleLike();
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -34,6 +35,11 @@ export function PostDetailPage() {
         },
       }
     );
+  };
+
+  const handleToggleLike = () => {
+    if (!currentUser?.id || !id || !post || isTogglingLike) return;
+    toggleLike({ postId: id, isLiked: post.is_liked });
   };
 
   if (isLoading) {
@@ -96,7 +102,9 @@ export function PostDetailPage() {
 
       <div className="mt-12 pt-8 border-t border-border flex items-center gap-6">
         <button
-          className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all ${
+          onClick={handleToggleLike}
+          disabled={!currentUser?.id || isTogglingLike}
+          className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
             post.is_liked
               ? "border-primary bg-primary/10 text-primary"
               : "border-border hover:border-primary/50 text-muted-foreground hover:text-foreground"

@@ -66,3 +66,16 @@ export function useCreateComment() {
     },
   })
 }
+
+export function useToggleLike() {
+  const queryClient = useQueryClient()
+  
+  return useMutation({
+    mutationFn: ({ postId, isLiked }: { postId: string; isLiked: boolean }) => 
+      postService.toggleLike(postId, isLiked),
+    onSuccess: (_, variables) => {
+      queryClient.invalidateQueries({ queryKey: ['posts', variables.postId] })
+      queryClient.invalidateQueries({ queryKey: ['posts'] })
+    },
+  })
+}

@@ -26,4 +26,17 @@ export const postService = {
       method: HttpMethod.POST,
       body: JSON.stringify(data),
     }),
+  
+  like: (id: string) =>
+    apiClient<Post>(`/posts/${id}/like`, {
+      method: HttpMethod.PATCH,
+    }),
+  
+  unlike: (id: string) =>
+    apiClient<Post>(`/posts/${id}/unlike`, {
+      method: HttpMethod.PATCH,
+    }),
+  
+  toggleLike: (id: string, isLiked: boolean) =>
+    isLiked ? postService.unlike(id) : postService.like(id),
 }

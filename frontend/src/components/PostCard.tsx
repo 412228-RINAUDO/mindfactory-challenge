@@ -39,7 +39,7 @@ export function PostCard({ post }: PostCardProps) {
         </div>
         <div className="flex items-center gap-4 text-sm text-muted-foreground">
           <span className="flex items-center gap-1.5">
-            <Heart className="h-4 w-4" />
+            <Heart className={`h-4 w-4 ${post.is_liked ? "fill-primary" : ""}`} />
             {post.likes_count}
           </span>
           <span className="flex items-center gap-1.5">
