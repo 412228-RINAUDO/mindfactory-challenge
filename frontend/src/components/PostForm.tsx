@@ -32,6 +32,7 @@ export function PostForm({
     <form onSubmit={handleSubmit} className="max-w-3xl mx-auto px-6 py-12">
       <div className="mb-8">
         <Input
+          data-testid="post-title-input"
           type="text"
           placeholder="Post title"
           value={title}
@@ -43,6 +44,7 @@ export function PostForm({
 
       <div className="mb-8">
         <Textarea
+          data-testid="post-content-textarea"
           placeholder="Write your story..."
           value={content}
           onChange={(e) => setContent(e.target.value)}

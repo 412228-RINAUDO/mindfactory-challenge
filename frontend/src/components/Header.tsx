@@ -23,19 +23,13 @@ export function Header() {
           >
             Writespace
           </Link>
-          <Link
-            to="/"
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden sm:block"
-          >
-            Posts
-          </Link>
         </div>
 
         <div className="flex items-center gap-4">
           {user?.id ? (
             <>
               <Button variant="ghost" size="sm" className="gap-2" asChild>
-                <Link to="posts/create">
+                <Link to="/posts/create">
                   <PenLine className="h-4 w-4" />
                   <span className="hidden sm:inline">Write</span>
                 </Link>

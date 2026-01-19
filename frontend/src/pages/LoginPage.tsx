@@ -36,6 +36,7 @@ export function LoginPage() {
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
+              data-testid="login-email-input"
               type="email"
               placeholder="you@example.com"
               value={email}
@@ -49,6 +50,7 @@ export function LoginPage() {
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"
+              data-testid="login-password-input"
               type="password"
               placeholder="••••••••"
               value={password}

@@ -66,6 +66,7 @@ export function ProfileEditPage() {
           <Label htmlFor="name">Name</Label>
           <Input
             id="name"
+            data-testid="profile-name-input"
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -78,6 +79,7 @@ export function ProfileEditPage() {
           <Label htmlFor="email">Email</Label>
           <Input
             id="email"
+            data-testid="profile-email-input"
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
