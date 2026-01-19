@@ -6,7 +6,7 @@ import { IPostsRepository } from './posts.repository.interface';
 export class PostsRepository implements IPostsRepository {
   constructor(private prisma: PrismaService) {}
 
-  async findAll(page: number, pageItems: number) {
+  async findAll(page: number, pageItems: number, userId?: string) {
     const skip = (page - 1) * pageItems;
 
     const [data, total] = await Promise.all([
@@ -18,8 +18,14 @@ export class PostsRepository implements IPostsRepository {
           _count: {
             select: {
               comments: true,
+              likes: true,
             },
           },
+          likes: userId ? {
+            where: {
+              userId,
+            },
+          } : false,
         },
         orderBy: { createdAt: 'desc' },
       }),
@@ -48,6 +54,11 @@ export class PostsRepository implements IPostsRepository {
             createdAt: 'desc',
           },
         },
+        _count: {
+          select: {
+            likes: true,
+          },
+        },
       },
     });
   }
@@ -60,6 +71,7 @@ export class PostsRepository implements IPostsRepository {
         _count: {
           select: {
             comments: true,
+            likes: true,
           },
         },
       },
@@ -75,45 +87,39 @@ export class PostsRepository implements IPostsRepository {
         _count: {
           select: {
             comments: true,
+            likes: true,
           },
         },
       },
     });
   }
 
-  async incrementLikes(id: string) {
-    return this.prisma.post.update({
-      where: { id },
+  async createLike(postId: string, userId: string) {
+    return this.prisma.like.create({
       data: {
-        likesCount: {
-          increment: 1,
-        },
+        postId,
+        userId,
       },
-      include: { 
-        user: true,
-        _count: {
-          select: {
-            comments: true,
-          },
+    });
+  }
+
+  async deleteLike(postId: string, userId: string) {
+    return this.prisma.like.delete({
+      where: {
+        userId_postId: {
+          userId,
+          postId,
         },
       },
     });
   }
 
-  async decrementLikes(id: string) {
-    return this.prisma.post.update({
-      where: { id },
-      data: {
-        likesCount: {
-          decrement: 1,
-        },
-      },
-      include: { 
-        user: true,
-        _count: {
-          select: {
-            comments: true,
-          },
+  async findLike(postId: string, userId: string) {
+    return this.prisma.like.findUnique({
+      where: {
+        userId_postId: {
+          userId,
+          postId,
         },
       },
     });

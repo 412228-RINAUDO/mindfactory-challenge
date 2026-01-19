@@ -33,12 +33,14 @@ export class PostsController {
   async findAll(
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
     @Query('page_items', new ParseIntPipe({ optional: true })) pageItems?: number,
+    @Req() req?: AuthenticatedRequest,
   ): Promise<PaginatedResponseDto<PostResponseDto>> {
     const finalPage = page || DEFAULT_PAGE;
     const finalPageItems = pageItems || DEFAULT_PAGE_ITEMS;
+    const userId = req?.user?.sub;
     
     const { postsDto, total } =
-      await this.postsService.findAll(finalPage, finalPageItems);
+      await this.postsService.findAll(finalPage, finalPageItems, userId);
 
     return new PaginatedResponseDto(postsDto, { page: finalPage, pageItems: finalPageItems, total });
   }
@@ -73,14 +75,20 @@ export class PostsController {
   }
 
   @Patch(':id/like')
-  async addLike(@Param('id') id: string): Promise<PostResponseDto> {
-    const post = await this.postsService.incrementLikes(id);
-    return new PostResponseDto(post);
+  async addLike(
+    @Param('id') id: string,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<{ message: string }> {
+    await this.postsService.addLike(id, req.user.sub);
+    return { message: 'Like added successfully' };
   }
 
   @Patch(':id/unlike')
-  async removeLike(@Param('id') id: string): Promise<PostResponseDto> {
-    const post = await this.postsService.decrementLikes(id);
-    return new PostResponseDto(post);
+  async removeLike(
+    @Param('id') id: string,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<{ message: string }> {
+    await this.postsService.removeLike(id, req.user.sub);
+    return { message: 'Like removed successfully' };
   }
 }

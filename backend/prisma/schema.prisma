@@ -23,6 +23,7 @@ model User {
   
   posts     Post[]
   comments  Comment[]
+  likes     Like[]
 
   @@map("users")
 }
@@ -32,11 +33,11 @@ model Post {
   title     String   @db.Text
   content   String   @db.Text
   userId    String   @map("user_id") @db.Uuid
-  likesCount Int     @default(0) @map("likes_count")
   createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
   
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   comments  Comment[]
+  likes     Like[]
 
   @@index([userId])
   @@map("posts")
@@ -54,4 +55,19 @@ model Comment {
 
   @@index([postId])
   @@map("comments")
+}
+
+model Like {
+  id        String   @id @default(uuid()) @db.Uuid
+  userId    String   @map("user_id") @db.Uuid
+  postId    String   @map("post_id") @db.Uuid
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamp(6)
+  
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, postId])
+  @@index([postId])
+  @@index([userId])
+  @@map("likes")
 }

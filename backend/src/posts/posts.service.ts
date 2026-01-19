@@ -16,8 +16,8 @@ export class PostsService {
     private readonly usersService: UsersService,
   ) {}
 
-  async findAll(page: number, pageItems: number) {
-    const { data, total } = await this.postsRepository.findAll(page, pageItems);
+  async findAll(page: number, pageItems: number, userId?: string) {
+    const { data, total } = await this.postsRepository.findAll(page, pageItems, userId);
 
     const postsDto = data.map((post) => new PostResponseDto(post));
 
@@ -49,18 +49,26 @@ export class PostsService {
     return this.postsRepository.update(postId, data);
   }
 
-  async incrementLikes(postId: string) {
+  async addLike(postId: string, userId: string) {
     await this.findById(postId);
-    return this.postsRepository.incrementLikes(postId);
+    await this.usersService.findById(userId);
+    
+    const existingLike = await this.postsRepository.findLike(postId, userId);
+    if (existingLike) {
+      return existingLike;
+    }
+    
+    return this.postsRepository.createLike(postId, userId);
   }
 
-  async decrementLikes(postId: string) {
-    const post = await this.findById(postId);
+  async removeLike(postId: string, userId: string) {
+    await this.findById(postId);
     
-    if (post.likesCount === 0) {
+    const existingLike = await this.postsRepository.findLike(postId, userId);
+    if (!existingLike) {
       throw new CannotRemoveLikeException();
     }
     
-    return this.postsRepository.decrementLikes(postId);
+    return this.postsRepository.deleteLike(postId, userId);
   }
 }
