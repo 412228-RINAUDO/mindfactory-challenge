@@ -6,4 +6,9 @@ export interface ICommentsRepository {
     userId: string;
     postId: string;
   }): Promise<CommentWithUser>;
+  
+  findByPostId(postId: string, page: number, pageItems: number): Promise<{
+    data: CommentWithUser[];
+    total: number;
+  }>;
 }

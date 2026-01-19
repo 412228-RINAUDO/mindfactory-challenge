@@ -28,4 +28,18 @@ export class CommentsService {
 
     return new CommentResponseDto(comment);
   }
+
+  async findByPostId(postId: string, page: number, pageItems: number) {
+    await this.postsService.findById(postId);
+
+    const { data, total } = await this.commentsRepository.findByPostId(
+      postId,
+      page,
+      pageItems,
+    );
+
+    const commentsDto = data.map((comment) => new CommentResponseDto(comment));
+
+    return { commentsDto, total };
+  }
 }

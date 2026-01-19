@@ -1,4 +1,4 @@
-import { Post, User, Comment, Like } from '../../generated/prisma/client';
+import { Post, User, Like } from '../../generated/prisma/client';
 
 export type PostWithUserAndCommentsCount = Post & { 
   user: User; 
@@ -6,9 +6,8 @@ export type PostWithUserAndCommentsCount = Post & {
   likes?: Like[];
 };
 
-export type PostWithUserAndComments = Post & { 
+export type PostWithUser = Post & { 
   user: User; 
-  comments: (Comment & { user: Pick<User, 'id' | 'name' | 'email'> })[];
   _count: { likes: number };
   likes?: Like[];
 };
@@ -18,7 +17,7 @@ export interface IPostsRepository {
     data: PostWithUserAndCommentsCount[];
     total: number;
   }>;
-  findById(id: string, userId?: string): Promise<PostWithUserAndComments | null>;
+  findById(id: string, userId?: string): Promise<PostWithUser | null>;
   create(data: { title: string; content: string; userId: string }): Promise<PostWithUserAndCommentsCount>;
   update(id: string, data: { title?: string; content?: string }): Promise<PostWithUserAndCommentsCount>;
   createLike(postId: string, userId: string): Promise<Like>;

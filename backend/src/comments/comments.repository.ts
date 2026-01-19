@@ -25,4 +25,29 @@ export class CommentsRepository implements ICommentsRepository {
       },
     });
   }
+
+  async findByPostId(postId: string, page: number, pageItems: number) {
+    const skip = (page - 1) * pageItems;
+
+    const [data, total] = await Promise.all([
+      this.prisma.comment.findMany({
+        where: { postId },
+        skip,
+        take: pageItems,
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true,
+            },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+      }),
+      this.prisma.comment.count({ where: { postId } }),
+    ]);
+
+    return { data, total };
+  }
 }

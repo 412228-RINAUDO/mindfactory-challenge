@@ -40,20 +40,6 @@ export class PostsRepository implements IPostsRepository {
       where: { id },
       include: { 
         user: true,
-        comments: {
-          include: {
-            user: {
-              select: {
-                id: true,
-                name: true,
-                email: true,
-              },
-            },
-          },
-          orderBy: {
-            createdAt: 'desc',
-          },
-        },
         _count: {
           select: {
             likes: true,

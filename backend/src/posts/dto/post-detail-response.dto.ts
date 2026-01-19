@@ -1,6 +1,5 @@
 import { PostUserResponseDto } from './post-user-response.dto';
-import { CommentResponseDto } from '../../comments/dto/comment-response.dto';
-import { PostWithUserAndComments } from '../posts.repository.interface';
+import { PostWithUser } from '../posts.repository.interface';
 
 export class PostDetailResponseDto {
   id: string;
@@ -10,9 +9,8 @@ export class PostDetailResponseDto {
   is_liked: boolean;
   user: PostUserResponseDto;
   created_at: Date;
-  comments: CommentResponseDto[];
 
-  constructor(post: PostWithUserAndComments) {
+  constructor(post: PostWithUser) {
     this.id = post.id;
     this.title = post.title;
     this.content = post.content;
@@ -20,6 +18,5 @@ export class PostDetailResponseDto {
     this.is_liked = post.likes ? post.likes.length > 0 : false;
     this.user = new PostUserResponseDto(post.user);
     this.created_at = post.createdAt;
-    this.comments = post.comments.map(comment => new CommentResponseDto(comment));
   }
 }

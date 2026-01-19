@@ -156,7 +156,7 @@ describe('Posts (e2e)', () => {
   });
 
   describe('GET /posts/:id', () => {
-    it('should get post by id with user information and comments', async () => {
+    it('should get post by id with user information', async () => {
       const createResponse = await request(app.getHttpServer())
         .post('/posts')
         .set('Authorization', `Bearer ${authToken}`)
@@ -166,14 +166,6 @@ describe('Posts (e2e)', () => {
         });
 
       const postId = createResponse.body.id;
-
-      // Create a comment
-      await request(app.getHttpServer())
-        .post(`/posts/${postId}/comments`)
-        .set('Authorization', `Bearer ${authToken}`)
-        .send({
-          content: 'Test Comment',
-        });
 
       // Add a like
       await request(app.getHttpServer())
@@ -195,13 +187,8 @@ describe('Posts (e2e)', () => {
       expect(response.body.user).toHaveProperty('name', 'Test User');
       expect(response.body.user).not.toHaveProperty('password');
       
-      // Verify comments are included
-      expect(response.body).toHaveProperty('comments');
-      expect(Array.isArray(response.body.comments)).toBe(true);
-      expect(response.body.comments).toHaveLength(1);
-      expect(response.body.comments[0]).toHaveProperty('content', 'Test Comment');
-      expect(response.body.comments[0]).toHaveProperty('user');
-      expect(response.body.comments[0].user).toHaveProperty('name', 'Test User');
+      // Verify comments are NOT included in post detail
+      expect(response.body).not.toHaveProperty('comments');
     });
 
     it('should fail when post does not exist', () => {

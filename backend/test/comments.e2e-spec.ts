@@ -61,6 +61,95 @@ describe('Comments (e2e)', () => {
     postId = postResponse.body.id;
   });
 
+  describe('GET /posts/:postId/comments', () => {
+    it('should get paginated comments successfully', async () => {
+      // Create multiple comments
+      await request(app.getHttpServer())
+        .post(`/posts/${postId}/comments`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ content: 'Comment 1' });
+
+      await request(app.getHttpServer())
+        .post(`/posts/${postId}/comments`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ content: 'Comment 2' });
+
+      await request(app.getHttpServer())
+        .post(`/posts/${postId}/comments`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ content: 'Comment 3' });
+
+      const response = await request(app.getHttpServer())
+        .get(`/posts/${postId}/comments`)
+        .expect(200);
+
+      expect(response.body).toHaveProperty('data');
+      expect(response.body).toHaveProperty('meta');
+      expect(response.body.data).toHaveLength(3);
+      expect(response.body.meta).toEqual({
+        page: 1,
+        pageItems: 10,
+        total: 3,
+        totalPages: 1,
+      });
+    });
+
+    it('should paginate comments correctly', async () => {
+      // Create 15 comments
+      for (let i = 1; i <= 15; i++) {
+        await request(app.getHttpServer())
+          .post(`/posts/${postId}/comments`)
+          .set('Authorization', `Bearer ${authToken}`)
+          .send({ content: `Comment ${i}` });
+      }
+
+      const response = await request(app.getHttpServer())
+        .get(`/posts/${postId}/comments?page=2&page_items=5`)
+        .expect(200);
+
+      expect(response.body.data).toHaveLength(5);
+      expect(response.body.meta).toEqual({
+        page: 2,
+        pageItems: 5,
+        total: 15,
+        totalPages: 3,
+      });
+    });
+
+    it('should return empty array when post has no comments', async () => {
+      const response = await request(app.getHttpServer())
+        .get(`/posts/${postId}/comments`)
+        .expect(200);
+
+      expect(response.body.data).toHaveLength(0);
+      expect(response.body.meta.total).toBe(0);
+    });
+
+    it('should fail when post does not exist', () => {
+      const nonExistentId = '00000000-0000-0000-0000-000000000000';
+
+      return request(app.getHttpServer())
+        .get(`/posts/${nonExistentId}/comments`)
+        .expect(404)
+        .expect((res) => {
+          expect(res.body).toHaveProperty('errorCode', 'POST_NOT_FOUND');
+        });
+    });
+
+    it('should work without authentication', async () => {
+      await request(app.getHttpServer())
+        .post(`/posts/${postId}/comments`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({ content: 'Public Comment' });
+
+      const response = await request(app.getHttpServer())
+        .get(`/posts/${postId}/comments`)
+        .expect(200);
+
+      expect(response.body.data).toHaveLength(1);
+    });
+  });
+
   describe('POST /posts/:postId/comments', () => {
     it('should create comment successfully', async () => {
       const response = await request(app.getHttpServer())
