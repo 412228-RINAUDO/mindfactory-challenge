@@ -47,8 +47,12 @@ export class PostsController {
 
   @Get(':id')
   @Public()
-  async findOne(@Param('id') id: string): Promise<PostDetailResponseDto> {
-    const post = await this.postsService.findById(id);
+  async findOne(
+    @Param('id') id: string,
+    @Req() req?: AuthenticatedRequest,
+  ): Promise<PostDetailResponseDto> {
+    const userId = req?.user?.sub;
+    const post = await this.postsService.findById(id, userId);
     return new PostDetailResponseDto(post);
   }
 

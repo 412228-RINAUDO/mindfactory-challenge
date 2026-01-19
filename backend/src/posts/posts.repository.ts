@@ -35,7 +35,7 @@ export class PostsRepository implements IPostsRepository {
     return { data, total };
   }
 
-  async findById(id: string) {
+  async findById(id: string, userId?: string) {
     return this.prisma.post.findUnique({
       where: { id },
       include: { 
@@ -59,6 +59,11 @@ export class PostsRepository implements IPostsRepository {
             likes: true,
           },
         },
+        likes: userId ? {
+          where: {
+            userId,
+          },
+        } : false,
       },
     });
   }

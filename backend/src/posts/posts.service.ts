@@ -24,8 +24,8 @@ export class PostsService {
     return { postsDto, total };
   }
 
-  async findById(id: string) {
-    const post = await this.postsRepository.findById(id);
+  async findById(id: string, userId?: string) {
+    const post = await this.postsRepository.findById(id, userId);
 
     if (!post) {
       throw new PostNotFoundException(id);

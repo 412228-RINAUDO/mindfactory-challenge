@@ -10,6 +10,7 @@ export type PostWithUserAndComments = Post & {
   user: User; 
   comments: (Comment & { user: Pick<User, 'id' | 'name' | 'email'> })[];
   _count: { likes: number };
+  likes?: Like[];
 };
 
 export interface IPostsRepository {
@@ -17,7 +18,7 @@ export interface IPostsRepository {
     data: PostWithUserAndCommentsCount[];
     total: number;
   }>;
-  findById(id: string): Promise<PostWithUserAndComments | null>;
+  findById(id: string, userId?: string): Promise<PostWithUserAndComments | null>;
   create(data: { title: string; content: string; userId: string }): Promise<PostWithUserAndCommentsCount>;
   update(id: string, data: { title?: string; content?: string }): Promise<PostWithUserAndCommentsCount>;
   createLike(postId: string, userId: string): Promise<Like>;
