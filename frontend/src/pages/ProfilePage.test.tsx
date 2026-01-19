@@ -3,7 +3,6 @@ import { render, screen } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom'
 import { ProfilePage } from './ProfilePage'
 
-// Mock useParams hook
 const mockUseParams = vi.fn()
 
 vi.mock('react-router-dom', async () => {
@@ -14,7 +13,6 @@ vi.mock('react-router-dom', async () => {
   }
 })
 
-// Mock useAuth hook
 const mockUseAuth = vi.fn()
 
 vi.mock('@/contexts/AuthContext', async () => {
@@ -25,7 +23,6 @@ vi.mock('@/contexts/AuthContext', async () => {
   }
 })
 
-// Mock useUser hook
 const mockUseUser = vi.fn()
 
 vi.mock('@/hooks/useUser', () => ({
@@ -73,7 +70,7 @@ describe('ProfilePage', () => {
         </BrowserRouter>
       )
 
-      screen.getByText('Loading profile...')
+      screen.getByText('Cargando perfil...')
     })
   })
 
@@ -91,7 +88,7 @@ describe('ProfilePage', () => {
         </BrowserRouter>
       )
 
-      screen.getByText('Error loading profile')
+      screen.getByText('Error al cargar el perfil')
     })
   })
 
@@ -131,7 +128,7 @@ describe('ProfilePage', () => {
         </BrowserRouter>
       )
 
-      screen.getByText('Joined Jan 15, 2024')
+      screen.getByText('Se unió el 15 ene 2024')
     })
 
     it('should render "All posts" back link', () => {
@@ -141,7 +138,7 @@ describe('ProfilePage', () => {
         </BrowserRouter>
       )
 
-      const backLink = screen.getByRole('link', { name: 'All posts' })
+      const backLink = screen.getByRole('link', { name: 'Todos los posts' })
       expect(backLink).toHaveAttribute('href', '/')
     })
   })
@@ -168,7 +165,7 @@ describe('ProfilePage', () => {
         </BrowserRouter>
       )
 
-      screen.getByRole('link', { name: 'Edit profile' })
+      screen.getByRole('link', { name: 'Editar perfil' })
     })
 
     it('should NOT show "Edit profile" button when current user is not the owner', () => {
@@ -184,7 +181,7 @@ describe('ProfilePage', () => {
         </BrowserRouter>
       )
 
-      const editButton = screen.queryByRole('link', { name: 'Edit profile' })
+      const editButton = screen.queryByRole('link', { name: 'Editar perfil' })
       expect(editButton).not.toBeInTheDocument()
     })
 
@@ -201,7 +198,7 @@ describe('ProfilePage', () => {
         </BrowserRouter>
       )
 
-      const editButton = screen.queryByRole('link', { name: 'Edit profile' })
+      const editButton = screen.queryByRole('link', { name: 'Editar perfil' })
       expect(editButton).not.toBeInTheDocument()
     })
   })
@@ -226,7 +223,7 @@ describe('ProfilePage', () => {
         </BrowserRouter>
       )
 
-      const editButton = screen.getByRole('link', { name: 'Edit profile' })
+      const editButton = screen.getByRole('link', { name: 'Editar perfil' })
       expect(editButton).toHaveAttribute('href', `/profile/${mockUser.id}/edit`)
     })
   })

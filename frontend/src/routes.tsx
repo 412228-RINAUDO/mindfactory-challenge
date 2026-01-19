@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import { Layout } from "./components/Layout"
+import { PrivateRoutes } from "./components/PrivateRoutes"
 import { PostsPage } from "./pages/PostsPage"
 import { PostDetailPage } from "./pages/PostDetailPage"
 import { CreatePostPage } from "./pages/CreatePostPage"
@@ -7,7 +8,8 @@ import { EditPostPage } from "./pages/EditPostPage"
 import { LoginPage } from "./pages/LoginPage"
 import { SignUpPage } from "./pages/SignUpPage"
 import { ProfilePage } from "./pages/ProfilePage"
-import { ProfileEditPage } from "./pages/ProfileEditPage"
+import { EditProfilePage } from "./pages/EditProfilePage"
+import { NotFoundPage } from "./pages/NotFoundPage"
 
 const router = createBrowserRouter([
   {
@@ -18,16 +20,12 @@ const router = createBrowserRouter([
         element: <PostsPage />,
       },
       {
-        path: "/posts/create",
-        element: <CreatePostPage />,
-      },
-      {
         path: "/posts/:id",
         element: <PostDetailPage />,
       },
       {
-        path: "/posts/:id/edit",
-        element: <EditPostPage />,
+        path: "/profile/:id",
+        element: <ProfilePage />,
       },
       {
         path: "/login",
@@ -38,12 +36,25 @@ const router = createBrowserRouter([
         element: <SignUpPage />,
       },
       {
-        path: "/profile/:id",
-        element: <ProfilePage />,
+        element: <PrivateRoutes />,
+        children: [
+          {
+            path: "/posts/create",
+            element: <CreatePostPage />,
+          },
+          {
+            path: "/posts/:id/edit",
+            element: <EditPostPage />,
+          },
+          {
+            path: "/profile/:id/edit",
+            element: <EditProfilePage />,
+          },
+        ],
       },
       {
-        path: "/profile/:id/edit",
-        element: <ProfileEditPage />,
+        path: "*",
+        element: <NotFoundPage />,
       },
     ],
   },

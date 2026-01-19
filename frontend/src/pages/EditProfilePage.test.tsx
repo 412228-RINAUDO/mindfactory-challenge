@@ -2,9 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
-import { ProfileEditPage } from './ProfileEditPage'
+import { EditProfilePage } from './EditProfilePage'
 
-// Mock useNavigate hook
 const mockNavigate = vi.fn()
 
 vi.mock('react-router-dom', async () => {
@@ -15,7 +14,6 @@ vi.mock('react-router-dom', async () => {
   }
 })
 
-// Mock useAuth hook
 const mockUseAuth = vi.fn()
 
 vi.mock('@/contexts/AuthContext', async () => {
@@ -26,7 +24,6 @@ vi.mock('@/contexts/AuthContext', async () => {
   }
 })
 
-// Mock useUser and useUpdateUser hooks
 const mockUseUser = vi.fn()
 const mockUseUpdateUser = vi.fn()
 
@@ -35,7 +32,7 @@ vi.mock('@/hooks/useUser', () => ({
   useUpdateUser: (id: string) => mockUseUpdateUser(id),
 }))
 
-describe('ProfileEditPage', () => {
+describe('EditProfilePage', () => {
   const mockCurrentUser = {
     id: '123',
     name: 'John Doe',
@@ -68,11 +65,11 @@ describe('ProfileEditPage', () => {
 
       render(
         <BrowserRouter>
-          <ProfileEditPage />
+          <EditProfilePage />
         </BrowserRouter>
       )
 
-      screen.getByText('Loading profile...')
+      screen.getByText('Cargando perfil...')
     })
   })
 
@@ -85,7 +82,7 @@ describe('ProfileEditPage', () => {
 
       render(
         <BrowserRouter>
-          <ProfileEditPage />
+          <EditProfilePage />
         </BrowserRouter>
       )
     })
@@ -96,15 +93,15 @@ describe('ProfileEditPage', () => {
     })
 
     it('should render "Save changes" button', () => {
-      screen.getByRole('button', { name: 'Save changes' })
+      screen.getByRole('button', { name: 'Guardar cambios' })
     })
 
     it('should render "Cancel" button', () => {
-      screen.getByRole('button', { name: 'Cancel' })
+      screen.getByRole('button', { name: 'Cancelar' })
     })
 
     it('should render "Back to profile" link', () => {
-      const backLink = screen.getByRole('link', { name: 'Back to profile' })
+      const backLink = screen.getByRole('link', { name: 'Volver al perfil' })
       expect(backLink).toHaveAttribute('href', `/profile/${mockCurrentUser.id}`)
     })
   })
@@ -118,7 +115,7 @@ describe('ProfileEditPage', () => {
 
       render(
         <BrowserRouter>
-          <ProfileEditPage />
+          <EditProfilePage />
         </BrowserRouter>
       )
 
@@ -145,7 +142,7 @@ describe('ProfileEditPage', () => {
 
       render(
         <BrowserRouter>
-          <ProfileEditPage />
+          <EditProfilePage />
         </BrowserRouter>
       )
 
@@ -161,7 +158,7 @@ describe('ProfileEditPage', () => {
       await user.type(nameInput, 'Jane Doe')
       await user.type(emailInput, 'jane@example.com')
 
-      const submitButton = screen.getByRole('button', { name: 'Save changes' })
+      const submitButton = screen.getByRole('button', { name: 'Guardar cambios' })
       await user.click(submitButton)
 
       expect(mockMutate).toHaveBeenCalledTimes(1)
@@ -182,7 +179,7 @@ describe('ProfileEditPage', () => {
 
       render(
         <BrowserRouter>
-          <ProfileEditPage />
+          <EditProfilePage />
         </BrowserRouter>
       )
 
@@ -198,7 +195,7 @@ describe('ProfileEditPage', () => {
       await user.type(nameInput, 'Jane Doe')
       await user.type(emailInput, 'jane@example.com')
 
-      const submitButton = screen.getByRole('button', { name: 'Save changes' })
+      const submitButton = screen.getByRole('button', { name: 'Guardar cambios' })
       await user.click(submitButton)
 
       expect(mockNavigate).toHaveBeenCalledWith(`/profile/${mockCurrentUser.id}`)
@@ -214,7 +211,7 @@ describe('ProfileEditPage', () => {
 
       render(
         <BrowserRouter>
-          <ProfileEditPage />
+          <EditProfilePage />
         </BrowserRouter>
       )
     })
@@ -264,11 +261,11 @@ describe('ProfileEditPage', () => {
 
       render(
         <BrowserRouter>
-          <ProfileEditPage />
+          <EditProfilePage />
         </BrowserRouter>
       )
 
-      const submitButton = screen.getByRole('button', { name: 'Saving...' })
+      const submitButton = screen.getByRole('button', { name: 'Guardando...' })
       expect(submitButton).toBeDisabled()
     })
   })

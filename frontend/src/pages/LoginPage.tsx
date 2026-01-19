@@ -27,8 +27,8 @@ export function LoginPage() {
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-6 py-12">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold tracking-tight mb-2">Welcome back</h1>
-          <p className="text-muted-foreground">Log in to create or edit posts</p>
+          <h1 className="text-2xl font-bold tracking-tight mb-2">Bienvenido de nuevo</h1>
+          <p className="text-muted-foreground">Inicia sesión para crear o editar publicaciones</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
@@ -47,7 +47,7 @@ export function LoginPage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">Contraseña</Label>
             <Input
               id="password"
               data-testid="login-password-input"
@@ -61,14 +61,14 @@ export function LoginPage() {
           </div>
 
           <Button type="submit" className="w-full" disabled={isPending}>
-            {isPending ? "Signing in..." : "Sign in"}
+            {isPending ? "Iniciando sesión..." : "Iniciar sesión"}
           </Button>
         </form>
 
         <p className="text-center text-sm text-muted-foreground mt-6">
-          {"Don't have an account? "}
+          {"¿No tienes una cuenta? "}
           <Link to="/register" className="text-primary hover:underline underline-offset-4">
-            Sign up
+            Regístrate
           </Link>
         </p>
 

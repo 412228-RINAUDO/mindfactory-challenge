@@ -4,7 +4,6 @@ import userEvent from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
 import { PostForm } from './PostForm'
 
-// Mock useNavigate hook
 const mockNavigate = vi.fn()
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom')
@@ -39,11 +38,11 @@ describe('PostForm', () => {
     })
 
     it('should render submit button', () => {
-      screen.getByRole('button', { name: 'Publish post' })
+      screen.getByRole('button', { name: 'Publicar' })
     })
 
     it('should render cancel button', () => {
-      screen.getByRole('button', { name: 'Cancel' })
+      screen.getByRole('button', { name: 'Cancelar' })
     })
   })
 
@@ -93,7 +92,7 @@ describe('PostForm', () => {
         </BrowserRouter>
       )
 
-      const submitButton = screen.getByRole('button', { name: 'Publish post' })
+      const submitButton = screen.getByRole('button', { name: 'Publicar' })
       expect(submitButton).toBeDisabled()
     })
 
@@ -104,7 +103,7 @@ describe('PostForm', () => {
         </BrowserRouter>
       )
 
-      const submitButton = screen.getByRole('button', { name: 'Publish post' })
+      const submitButton = screen.getByRole('button', { name: 'Publicar' })
       expect(submitButton).toBeDisabled()
     })
 
@@ -115,7 +114,7 @@ describe('PostForm', () => {
         </BrowserRouter>
       )
 
-      const submitButton = screen.getByRole('button', { name: 'Publish post' })
+      const submitButton = screen.getByRole('button', { name: 'Publicar' })
       expect(submitButton).toBeDisabled()
     })
 
@@ -126,7 +125,7 @@ describe('PostForm', () => {
         </BrowserRouter>
       )
 
-      const submitButton = screen.getByRole('button', { name: 'Publish post' })
+      const submitButton = screen.getByRole('button', { name: 'Publicar' })
       expect(submitButton).not.toBeDisabled()
     })
   })
@@ -147,7 +146,7 @@ describe('PostForm', () => {
       await user.type(titleInput, 'My Test Title')
       await user.type(contentTextarea, 'My test content')
 
-      const submitButton = screen.getByRole('button', { name: 'Publish post' })
+      const submitButton = screen.getByRole('button', { name: 'Publicar' })
       await user.click(submitButton)
 
       expect(mockOnSubmit).toHaveBeenCalledTimes(1)
@@ -164,7 +163,7 @@ describe('PostForm', () => {
         </BrowserRouter>
       )
 
-      screen.getByRole('button', { name: 'Saving...' })
+      screen.getByRole('button', { name: 'Guardando...' })
     })
   })
 
@@ -176,7 +175,7 @@ describe('PostForm', () => {
         </BrowserRouter>
       )
 
-      screen.getByRole('button', { name: 'Publish post' })
+      screen.getByRole('button', { name: 'Publicar' })
     })
 
     it('should show "Update post" when isEditing is true', () => {
@@ -186,7 +185,7 @@ describe('PostForm', () => {
         </BrowserRouter>
       )
 
-      screen.getByRole('button', { name: 'Update post' })
+      screen.getByRole('button', { name: 'Actualizar publicación' })
     })
   })
 
@@ -232,7 +231,7 @@ describe('PostForm', () => {
         </BrowserRouter>
       )
 
-      const cancelButton = screen.getByRole('button', { name: 'Cancel' })
+      const cancelButton = screen.getByRole('button', { name: 'Cancelar' })
       await user.click(cancelButton)
 
       expect(mockNavigate).toHaveBeenCalledWith(-1)

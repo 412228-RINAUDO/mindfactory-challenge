@@ -4,7 +4,6 @@ import userEvent from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
 import { EditPostPage } from './EditPostPage'
 
-// Mock useNavigate and useParams hooks
 const mockNavigate = vi.fn()
 const mockUseParams = vi.fn()
 
@@ -17,7 +16,6 @@ vi.mock('react-router-dom', async () => {
   }
 })
 
-// Mock usePost and useUpdatePost hooks
 const mockUsePost = vi.fn()
 const mockUseUpdatePost = vi.fn()
 
@@ -78,7 +76,7 @@ describe('EditPostPage', () => {
       </BrowserRouter>
     )
 
-    screen.getByText('Post not found')
+    screen.getByText('Post no encontrado')
   })
 
   it('should render PostForm with initial post data', () => {
@@ -112,7 +110,7 @@ describe('EditPostPage', () => {
       </BrowserRouter>
     )
 
-    screen.getByRole('button', { name: 'Update post' })
+    screen.getByRole('button', { name: 'Actualizar publicación' })
   })
 
   it('should call updatePost with correct data when form is submitted', async () => {
@@ -137,7 +135,7 @@ describe('EditPostPage', () => {
     await user.type(titleInput, 'Updated Title')
     await user.type(contentTextarea, 'Updated content')
 
-    const submitButton = screen.getByRole('button', { name: 'Update post' })
+    const submitButton = screen.getByRole('button', { name: 'Actualizar publicación' })
     await user.click(submitButton)
 
     expect(mockMutate).toHaveBeenCalledTimes(1)
@@ -175,7 +173,7 @@ describe('EditPostPage', () => {
     await user.type(titleInput, 'Updated Title')
     await user.type(contentTextarea, 'Updated content')
 
-    const submitButton = screen.getByRole('button', { name: 'Update post' })
+    const submitButton = screen.getByRole('button', { name: 'Actualizar publicación' })
     await user.click(submitButton)
 
     expect(mockNavigate).toHaveBeenCalledWith('/posts/1')

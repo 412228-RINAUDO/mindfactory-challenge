@@ -1,7 +1,7 @@
 import { useNavigate, useParams } from "react-router-dom";
 import { PostForm } from "@/components/PostForm";
+import { LoadingState } from "@/components/LoadingState";
 import { usePost, useUpdatePost } from "@/hooks/usePosts";
-import { Loader2 } from "lucide-react";
 
 export function EditPostPage() {
   const { id } = useParams<{ id: string }>();
@@ -21,17 +21,13 @@ export function EditPostPage() {
   };
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    );
+    return <LoadingState message="Cargando post..." />;
   }
 
   if (!post) {
     return (
       <div className="text-center py-12">
-        <p className="text-muted-foreground">Post not found</p>
+        <p className="text-muted-foreground">Post no encontrado</p>
       </div>
     );
   }

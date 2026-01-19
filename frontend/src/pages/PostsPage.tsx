@@ -2,6 +2,8 @@ import { Link } from "react-router-dom"
 import { PenLine } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { PostCard } from "@/components/PostCard"
+import { LoadingState } from "@/components/LoadingState"
+import { ErrorState } from "@/components/ErrorState"
 import { usePosts } from "@/hooks/usePosts"
 import { useAuth } from "@/contexts/AuthContext"
 
@@ -13,16 +15,16 @@ export function PostsPage() {
     <div className="max-w-3xl mx-auto px-6 py-12">
       <section className="mb-16">
         <h1 className="text-4xl sm:text-5xl font-bold tracking-tight mb-4 text-balance">
-          Ideas worth sharing
+          Ideas que vale la pena compartir
         </h1>
         <p className="text-lg text-muted-foreground mb-8 max-w-xl">
-          A space for writers and thinkers to share their perspectives on design, technology, and creativity.
+          Un espacio para escritores y pensadores que comparten sus perspectivas sobre diseño, tecnología y creatividad.
         </p>
         {!user?.id && (
           <Button size="lg" className="gap-2" asChild>
             <Link to="/login">
               <PenLine className="h-4 w-4" />
-              Start writing
+              Comenzar a escribir
             </Link>
           </Button>
         )}
@@ -30,20 +32,12 @@ export function PostsPage() {
 
       <section>
         <h2 className="text-sm font-medium text-muted-foreground uppercase tracking-wider mb-8">
-          Recent Posts
+          Publicaciones recientes
         </h2>
         
-        {isLoading && (
-          <div className="text-center py-12 text-muted-foreground">
-            Loading posts...
-          </div>
-        )}
+        {isLoading && <LoadingState message="Cargando posts..." />}
         
-        {error && (
-          <div className="text-center py-12 text-destructive">
-            Error loading posts: {error.message}
-          </div>
-        )}
+        {error && <ErrorState message="Error al cargar los posts" />}
         
         {response?.data && (
           <div className="space-y-6">

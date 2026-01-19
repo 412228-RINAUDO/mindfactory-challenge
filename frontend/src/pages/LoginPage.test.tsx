@@ -4,7 +4,6 @@ import userEvent from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
 import { LoginPage } from './LoginPage'
 
-// Mock useNavigate hook
 const mockNavigate = vi.fn()
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom')
@@ -14,7 +13,6 @@ vi.mock('react-router-dom', async () => {
   }
 })
 
-// Mock useLogin hook
 const mockMutate = vi.fn()
 const mockUseLogin = vi.fn()
 
@@ -46,11 +44,11 @@ describe('LoginPage', () => {
     })
 
     it('should render submit button', () => {
-      screen.getByRole('button', { name: 'Sign in' })
+      screen.getByRole('button', { name: 'Iniciar sesión' })
     })
 
     it('should render link to sign up page', () => {
-      const signupLink = screen.getByRole('link', { name: 'Sign up' })
+      const signupLink = screen.getByRole('link', { name: 'Regístrate' })
       expect(signupLink).toHaveAttribute('href', '/register')
     })
   })
@@ -68,7 +66,7 @@ describe('LoginPage', () => {
         </BrowserRouter>
       )
 
-      const submitButton = screen.getByRole('button', { name: 'Signing in...' })
+      const submitButton = screen.getByRole('button', { name: 'Iniciando sesión...' })
       expect(submitButton).toBeDisabled()
     })
   })
@@ -89,7 +87,7 @@ describe('LoginPage', () => {
       await user.type(emailInput, 'test@example.com')
       await user.type(passwordInput, 'password123')
 
-      const submitButton = screen.getByRole('button', { name: 'Sign in' })
+      const submitButton = screen.getByRole('button', { name: 'Iniciar sesión' })
       await user.click(submitButton)
 
       expect(mockMutate).toHaveBeenCalledTimes(1)
@@ -120,7 +118,7 @@ describe('LoginPage', () => {
       await user.type(emailInput, 'test@example.com')
       await user.type(passwordInput, 'password123')
 
-      const submitButton = screen.getByRole('button', { name: 'Sign in' })
+      const submitButton = screen.getByRole('button', { name: 'Iniciar sesión' })
       await user.click(submitButton)
 
       expect(mockNavigate).toHaveBeenCalledWith('/')

@@ -5,7 +5,6 @@ import { BrowserRouter } from 'react-router-dom'
 import { PostCard } from './PostCard'
 import type { Post } from '@/interfaces/Post'
 
-// Mock useNavigate hook
 const mockNavigate = vi.fn()
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom')
@@ -51,7 +50,7 @@ describe('PostCard', () => {
   })
 
   it('should render formatted date', () => {
-    screen.getByText('Jan 15, 2024')
+    screen.getByText('15 ene 2024')
   })
 
   it('should navigate to post detail when clicking on the post area', async () => {
