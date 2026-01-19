@@ -32,7 +32,7 @@ export class PostsController {
   @Public()
   async findAll(
     @Query('page', new ParseIntPipe({ optional: true })) page?: number,
-    @Query('pageItems', new ParseIntPipe({ optional: true })) pageItems?: number,
+    @Query('page_items', new ParseIntPipe({ optional: true })) pageItems?: number,
   ): Promise<PaginatedResponseDto<PostResponseDto>> {
     const finalPage = page || DEFAULT_PAGE;
     const finalPageItems = pageItems || DEFAULT_PAGE_ITEMS;
