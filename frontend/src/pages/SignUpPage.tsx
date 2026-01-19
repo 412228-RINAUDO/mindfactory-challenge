@@ -28,18 +28,18 @@ export function SignUpPage() {
     <div className="min-h-[calc(100vh-4rem)] flex items-center justify-center px-6 py-12">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <h1 className="text-2xl font-bold tracking-tight mb-2">Create an account</h1>
-          <p className="text-muted-foreground">Join Writespace to start sharing your ideas</p>
+          <h1 className="text-2xl font-bold tracking-tight mb-2">Crear una cuenta</h1>
+          <p className="text-muted-foreground">Únete a Writespace para compartir tus ideas</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="space-y-2">
-            <Label htmlFor="name">Name</Label>
+            <Label htmlFor="name">Nombre</Label>
             <Input
               id="name"
               data-testid="signup-name-input"
               type="text"
-              placeholder="Your name"
+              placeholder="Tu nombre"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
@@ -62,7 +62,7 @@ export function SignUpPage() {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password">Contraseña</Label>
             <Input
               id="password"
               data-testid="signup-password-input"
@@ -74,18 +74,18 @@ export function SignUpPage() {
               minLength={8}
               className="bg-secondary/50 border-border focus:bg-secondary"
             />
-            <p className="text-xs text-muted-foreground">Must be at least 8 characters</p>
+            <p className="text-xs text-muted-foreground">Debe tener al menos 8 caracteres</p>
           </div>
 
           <Button type="submit" className="w-full" disabled={isPending}>
-            {isPending ? "Creating account..." : "Create account"}
+            {isPending ? "Creando cuenta..." : "Crear cuenta"}
           </Button>
         </form>
 
         <p className="text-center text-sm text-muted-foreground mt-6">
-          Already have an account?{" "}
+          ¿Ya tienes una cuenta?{" "}
           <Link to="/login" className="text-primary hover:underline underline-offset-4">
-            Sign in
+            Inicia sesión
           </Link>
         </p>
 

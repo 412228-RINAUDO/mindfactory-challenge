@@ -4,7 +4,6 @@ import userEvent from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
 import { CreatePostPage } from './CreatePostPage'
 
-// Mock useNavigate hook
 const mockNavigate = vi.fn()
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom')
@@ -14,7 +13,6 @@ vi.mock('react-router-dom', async () => {
   }
 })
 
-// Mock useCreatePost hook
 const mockMutate = vi.fn()
 const mockUseCreatePost = vi.fn()
 
@@ -57,7 +55,7 @@ describe('CreatePostPage', () => {
     await user.type(titleInput, 'New Post Title')
     await user.type(contentTextarea, 'New post content')
 
-    const submitButton = screen.getByRole('button', { name: 'Publish post' })
+    const submitButton = screen.getByRole('button', { name: 'Publicar' })
     await user.click(submitButton)
 
     expect(mockMutate).toHaveBeenCalledTimes(1)
@@ -88,7 +86,7 @@ describe('CreatePostPage', () => {
     await user.type(titleInput, 'New Post Title')
     await user.type(contentTextarea, 'New post content')
 
-    const submitButton = screen.getByRole('button', { name: 'Publish post' })
+    const submitButton = screen.getByRole('button', { name: 'Publicar' })
     await user.click(submitButton)
 
     expect(mockNavigate).toHaveBeenCalledWith('/')

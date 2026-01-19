@@ -34,7 +34,7 @@ export function PostForm({
         <Input
           data-testid="post-title-input"
           type="text"
-          placeholder="Post title"
+          placeholder="Título de la publicación"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           className="text-3xl sm:text-4xl font-bold tracking-tight border border-border/50 bg-card/30 rounded-xl px-4 h-auto py-4 placeholder:text-muted-foreground/40 focus-visible:outline-none focus-visible:border-ring focus-visible:ring-0 focus-visible:ring-offset-0 hover:bg-card/50 hover:border-border transition-all duration-200"
@@ -45,7 +45,7 @@ export function PostForm({
       <div className="mb-8">
         <Textarea
           data-testid="post-content-textarea"
-          placeholder="Write your story..."
+          placeholder="Escribe tu historia..."
           value={content}
           onChange={(e) => setContent(e.target.value)}
           className="min-h-[50vh] text-lg leading-relaxed border border-border/50 bg-card/30 rounded-xl px-4 py-4 resize-none placeholder:text-muted-foreground/40 focus-visible:ring-0 focus-visible:ring-offset-0 hover:bg-card/50 hover:border-border transition-all duration-200"
@@ -55,10 +55,10 @@ export function PostForm({
 
       <div className="flex items-center gap-4 pt-6 border-t border-border">
         <Button type="submit" disabled={isSubmitting || !title.trim() || !content.trim()}>
-          {isSubmitting ? "Saving..." : isEditing ? "Update post" : "Publish post" }
+          {isSubmitting ? "Guardando..." : isEditing ? "Actualizar publicación" : "Publicar" }
         </Button>
         <Button type="button" variant="ghost" onClick={() => navigate(-1)}>
-          Cancel
+          Cancelar
         </Button>
       </div>
     </form>

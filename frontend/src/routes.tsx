@@ -1,5 +1,6 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import { Layout } from "./components/Layout"
+import { PrivateRoutes } from "./components/PrivateRoutes"
 import { PostsPage } from "./pages/PostsPage"
 import { PostDetailPage } from "./pages/PostDetailPage"
 import { CreatePostPage } from "./pages/CreatePostPage"
@@ -18,16 +19,8 @@ const router = createBrowserRouter([
         element: <PostsPage />,
       },
       {
-        path: "/posts/create",
-        element: <CreatePostPage />,
-      },
-      {
         path: "/posts/:id",
         element: <PostDetailPage />,
-      },
-      {
-        path: "/posts/:id/edit",
-        element: <EditPostPage />,
       },
       {
         path: "/login",
@@ -38,12 +31,25 @@ const router = createBrowserRouter([
         element: <SignUpPage />,
       },
       {
-        path: "/profile/:id",
-        element: <ProfilePage />,
-      },
-      {
-        path: "/profile/:id/edit",
-        element: <ProfileEditPage />,
+        element: <PrivateRoutes />,
+        children: [
+          {
+            path: "/posts/create",
+            element: <CreatePostPage />,
+          },
+          {
+            path: "/posts/:id/edit",
+            element: <EditPostPage />,
+          },
+          {
+            path: "/profile/:id",
+            element: <ProfilePage />,
+          },
+          {
+            path: "/profile/:id/edit",
+            element: <ProfileEditPage />,
+          },
+        ],
       },
     ],
   },

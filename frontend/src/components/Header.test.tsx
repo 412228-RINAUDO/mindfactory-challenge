@@ -3,9 +3,7 @@ import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
 import { Header } from './Header'
-import { AuthProvider } from '@/contexts/AuthContext'
 
-// Mock useNavigate hook
 const mockNavigate = vi.fn()
 vi.mock('react-router-dom', async () => {
   const actual = await vi.importActual('react-router-dom')
@@ -15,7 +13,6 @@ vi.mock('react-router-dom', async () => {
   }
 })
 
-// Mock AuthContext
 vi.mock('@/contexts/AuthContext', async () => {
   const actual = await vi.importActual('@/contexts/AuthContext')
   return {
@@ -66,24 +63,24 @@ describe('Header', () => {
     })
 
     it('should render "Log in" and "Sign up" buttons', () => {
-      screen.getByRole('link', { name: 'Log in' })
-      screen.getByRole('link', { name: 'Sign up' })
+      screen.getByRole('link', { name: 'Iniciar sesión' })
+      screen.getByRole('link', { name: 'Registrarse' })
     })
 
     it('"Log in" button should redirect to /login', () => {
-      const loginButton = screen.getByRole('link', { name: 'Log in' })
+      const loginButton = screen.getByRole('link', { name: 'Iniciar sesión' })
       expect(loginButton).toHaveAttribute('href', '/login')
     })
 
     it('"Sign up" button should redirect to /register', () => {
-      const signupButton = screen.getByRole('link', { name: 'Sign up' })
+      const signupButton = screen.getByRole('link', { name: 'Registrarse' })
       expect(signupButton).toHaveAttribute('href', '/register')
     })
   })
 
   describe('when user is authenticated', () => {
     const mockUser = {
-      id: 1,
+      id: '1',
       name: 'Juan Pérez',
       email: 'juan@example.com',
       bio: 'Test bio',
@@ -107,7 +104,7 @@ describe('Header', () => {
     })
 
     it('should render "Write" button that redirects to /posts/create', () => {
-      const writeButton = screen.getByRole('link', { name: 'Write' })
+      const writeButton = screen.getByRole('link', { name: 'Escribir' })
       expect(writeButton).toHaveAttribute('href', '/posts/create')
     })
 
@@ -117,13 +114,13 @@ describe('Header', () => {
     })
 
     it('should render "Log out" button', () => {
-      screen.getByRole('button', { name: 'Log out' })
+      screen.getByRole('button', { name: 'Cerrar sesión' })
     })
 
     it('clicking "Log out" should call logout and navigate to "/"', async () => {
       const user = userEvent.setup()
 
-      const logoutButton = screen.getByRole('button', { name: 'Log out' })
+      const logoutButton = screen.getByRole('button', { name: 'Cerrar sesión' })
       await user.click(logoutButton)
 
       expect(mockLogout).toHaveBeenCalledTimes(1)
@@ -131,8 +128,8 @@ describe('Header', () => {
     })
 
     it('should NOT render "Log in" and "Sign up" buttons', () => {
-      const loginButton = screen.queryByRole('link', { name: 'Log in' })
-      const signupButton = screen.queryByRole('link', { name: 'Sign up' })
+      const loginButton = screen.queryByRole('link', { name: 'Iniciar sesión' })
+      const signupButton = screen.queryByRole('link', { name: 'Registrarse' })
 
       expect(loginButton).not.toBeInTheDocument()
       expect(signupButton).not.toBeInTheDocument()

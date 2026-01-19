@@ -3,14 +3,12 @@ import { render, screen } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom'
 import { PostsPage } from './PostsPage'
 
-// Mock usePosts hook
 const mockUsePosts = vi.fn()
 
 vi.mock('@/hooks/usePosts', () => ({
   usePosts: () => mockUsePosts(),
 }))
 
-// Mock useAuth hook
 const mockUseAuth = vi.fn()
 
 vi.mock('@/contexts/AuthContext', async () => {
@@ -70,8 +68,8 @@ describe('PostsPage', () => {
         </BrowserRouter>
       )
 
-      screen.getByRole('heading', { name: 'Ideas worth sharing' })
-      screen.getByText(/a space for writers and thinkers/i)
+      screen.getByRole('heading', { name: 'Ideas que vale la pena compartir' })
+      screen.getByText(/un espacio para escritores y pensadores/i)
     })
   })
 
@@ -97,7 +95,7 @@ describe('PostsPage', () => {
         </BrowserRouter>
       )
 
-      screen.getByRole('link', { name: 'Start writing' })
+      screen.getByRole('link', { name: 'Comenzar a escribir' })
     })
 
     it('should NOT show "Start writing" button when user is logged in', () => {
@@ -119,7 +117,7 @@ describe('PostsPage', () => {
         </BrowserRouter>
       )
 
-      const startWritingButton = screen.queryByRole('link', { name: 'Start writing' })
+      const startWritingButton = screen.queryByRole('link', { name: 'Comenzar a escribir' })
       expect(startWritingButton).not.toBeInTheDocument()
     })
 
@@ -136,7 +134,7 @@ describe('PostsPage', () => {
         </BrowserRouter>
       )
 
-      const startWritingButton = screen.getByRole('link', { name: 'Start writing' })
+      const startWritingButton = screen.getByRole('link', { name: 'Comenzar a escribir' })
       expect(startWritingButton).toHaveAttribute('href', '/login')
     })
   })
@@ -155,7 +153,7 @@ describe('PostsPage', () => {
         </BrowserRouter>
       )
 
-      screen.getByText('Loading posts...')
+      screen.getByText('Cargando posts...')
     })
   })
 
@@ -173,7 +171,7 @@ describe('PostsPage', () => {
         </BrowserRouter>
       )
 
-      screen.getByText(/error loading posts: failed to fetch/i)
+      screen.getByText(/error al cargar los posts/i)
     })
   })
 

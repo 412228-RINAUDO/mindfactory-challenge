@@ -4,7 +4,6 @@ import userEvent from '@testing-library/user-event'
 import { BrowserRouter } from 'react-router-dom'
 import { PostDetailPage } from './PostDetailPage'
 
-// Mock useNavigate and useParams hooks
 const mockNavigate = vi.fn()
 const mockUseParams = vi.fn()
 
@@ -17,14 +16,12 @@ vi.mock('react-router-dom', async () => {
   }
 })
 
-// Mock usePost hook
 const mockUsePost = vi.fn()
 
 vi.mock('@/hooks/usePosts', () => ({
   usePost: (id: string) => mockUsePost(id),
 }))
 
-// Mock useAuth hook
 const mockUseAuth = vi.fn()
 
 vi.mock('@/contexts/AuthContext', async () => {
@@ -99,7 +96,7 @@ describe('PostDetailPage', () => {
         </BrowserRouter>
       )
 
-      screen.getByText('Post not found')
+      screen.getByText('Post no encontrado')
     })
 
     it('should show "Back to posts" link when post not found', () => {
@@ -115,7 +112,7 @@ describe('PostDetailPage', () => {
         </BrowserRouter>
       )
 
-      const backLink = screen.getByRole('link', { name: 'Back to posts' })
+      const backLink = screen.getByRole('link', { name: 'Todos los posts' })
       expect(backLink).toHaveAttribute('href', '/')
     })
   })
@@ -178,7 +175,7 @@ describe('PostDetailPage', () => {
         </BrowserRouter>
       )
 
-      const backLink = screen.getByRole('link', { name: 'All posts' })
+      const backLink = screen.getByRole('link', { name: 'Todos los posts' })
       expect(backLink).toHaveAttribute('href', '/')
     })
   })
@@ -205,7 +202,7 @@ describe('PostDetailPage', () => {
         </BrowserRouter>
       )
 
-      screen.getByRole('button', { name: 'Edit post' })
+      screen.getByRole('button', { name: 'Editar publicación' })
     })
 
     it('should NOT show "Edit post" button when current user is not the owner', () => {
@@ -221,7 +218,7 @@ describe('PostDetailPage', () => {
         </BrowserRouter>
       )
 
-      const editButton = screen.queryByRole('button', { name: 'Edit post' })
+      const editButton = screen.queryByRole('button', { name: 'Editar publicación' })
       expect(editButton).not.toBeInTheDocument()
     })
 
@@ -238,7 +235,7 @@ describe('PostDetailPage', () => {
         </BrowserRouter>
       )
 
-      const editButton = screen.queryByRole('button', { name: 'Edit post' })
+      const editButton = screen.queryByRole('button', { name: 'Editar publicación' })
       expect(editButton).not.toBeInTheDocument()
     })
   })
@@ -265,7 +262,7 @@ describe('PostDetailPage', () => {
         </BrowserRouter>
       )
 
-      const editButton = screen.getByRole('button', { name: 'Edit post' })
+      const editButton = screen.getByRole('button', { name: 'Editar publicación' })
       await user.click(editButton)
 
       expect(mockNavigate).toHaveBeenCalledWith('/posts/1/edit')

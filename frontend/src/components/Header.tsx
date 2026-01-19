@@ -31,7 +31,7 @@ export function Header() {
               <Button variant="ghost" size="sm" className="gap-2" asChild>
                 <Link to="/posts/create">
                   <PenLine className="h-4 w-4" />
-                  <span className="hidden sm:inline">Write</span>
+                  <span className="hidden sm:inline">Escribir</span>
                 </Link>
               </Button>
               <Link
@@ -41,16 +41,16 @@ export function Header() {
                 {user?.name}
               </Link>
               <Button variant="ghost" size="sm" onClick={handleLogout}>
-                Log out
+                Cerrar sesión
               </Button>
             </>
           ) : (
             <>
               <Button variant="ghost" size="sm" asChild>
-                <Link to="/login">Log in</Link>
+                <Link to="/login">Iniciar sesión</Link>
               </Button>
               <Button size="sm" asChild>
-                <Link to="/register">Sign up</Link>
+                <Link to="/register">Registrarse</Link>
               </Button>
             </>
           )}

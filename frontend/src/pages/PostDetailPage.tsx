@@ -1,9 +1,11 @@
 import { useParams, Link, useNavigate } from 'react-router-dom'
-import { ArrowLeft, Loader2, Pencil } from 'lucide-react'
+import { Pencil } from 'lucide-react'
 import { usePost } from '@/hooks/usePosts'
 import { formatDate } from '@/lib/formatDate'
 import { useEffect } from 'react'
 import { Button } from '@/components/ui/button'
+import { LoadingState } from '@/components/LoadingState'
+import { BackLink } from '@/components/BackLink'
 import { useAuth } from '@/contexts/AuthContext'
 
 export function PostDetailPage() {
@@ -18,33 +20,23 @@ export function PostDetailPage() {
   }, [id])
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-[60vh]">
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
-      </div>
-    )
+    return <LoadingState message="Cargando post..." />
   }
 
   if (error || !post) {
     return (
-      <div className="text-center py-12">
-        <p className="text-muted-foreground">Post not found</p>
-        <Link to="/" className="text-primary hover:underline mt-4 inline-block">
-          Back to posts
-        </Link>
+      <div className="max-w-3xl mx-auto px-6 py-12">
+        <BackLink to="/" label="Todos los posts" />
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">Post no encontrado</p>
+        </div>
       </div>
     )
   }
 
   return (
     <article className="max-w-3xl mx-auto px-6 py-12">
-      <Link 
-        to="/" 
-        className="inline-flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors mb-12"
-      >
-        <ArrowLeft className="h-4 w-4" />
-        All posts
-      </Link>
+      <BackLink to="/" label="Todos los posts" />
 
       <header className="mb-12">
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight mb-6 text-balance">
@@ -69,7 +61,7 @@ export function PostDetailPage() {
               onClick={() => navigate(`/posts/${post.id}/edit`)}
             >
               <Pencil className="h-4 w-4" />
-              Edit post
+              Editar publicación
             </Button>
           )}
         </div>
