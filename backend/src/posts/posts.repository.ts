@@ -13,7 +13,14 @@ export class PostsRepository implements IPostsRepository {
       this.prisma.post.findMany({
         skip,
         take: pageItems,
-        include: { user: true },
+        include: { 
+          user: true,
+          _count: {
+            select: {
+              comments: true,
+            },
+          },
+        },
         orderBy: { createdAt: 'desc' },
       }),
       this.prisma.post.count(),
@@ -25,14 +32,37 @@ export class PostsRepository implements IPostsRepository {
   async findById(id: string) {
     return this.prisma.post.findUnique({
       where: { id },
-      include: { user: true },
+      include: { 
+        user: true,
+        comments: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              },
+            },
+          },
+          orderBy: {
+            createdAt: 'desc',
+          },
+        },
+      },
     });
   }
 
   async create(data: { title: string; content: string; userId: string }) {
     return this.prisma.post.create({
       data,
-      include: { user: true },
+      include: { 
+        user: true,
+        _count: {
+          select: {
+            comments: true,
+          },
+        },
+      },
     });
   }
 
@@ -40,7 +70,14 @@ export class PostsRepository implements IPostsRepository {
     return this.prisma.post.update({
       where: { id },
       data,
-      include: { user: true },
+      include: { 
+        user: true,
+        _count: {
+          select: {
+            comments: true,
+          },
+        },
+      },
     });
   }
 
@@ -52,7 +89,14 @@ export class PostsRepository implements IPostsRepository {
           increment: 1,
         },
       },
-      include: { user: true },
+      include: { 
+        user: true,
+        _count: {
+          select: {
+            comments: true,
+          },
+        },
+      },
     });
   }
 
@@ -64,7 +108,14 @@ export class PostsRepository implements IPostsRepository {
           decrement: 1,
         },
       },
-      include: { user: true },
+      include: { 
+        user: true,
+        _count: {
+          select: {
+            comments: true,
+          },
+        },
+      },
     });
   }
 }

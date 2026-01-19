@@ -1,18 +1,19 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import type { IPostsRepository } from './posts.repository.interface';
 import { POSTS_REPOSITORY } from './posts.tokens';
 import { PostNotFoundException } from '../common/exceptions/post-not-found.exception';
 import { CannotRemoveLikeException } from '../common/exceptions/cannot-remove-like.exception';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
-import { Post, User } from '../../generated/prisma/client';
 import { PostResponseDto } from './dto/post-response.dto';
+import { UsersService } from '../users/users.service';
 
 @Injectable()
 export class PostsService {
   constructor(
     @Inject(POSTS_REPOSITORY)
     private readonly postsRepository: IPostsRepository,
+    private readonly usersService: UsersService,
   ) {}
 
   async findAll(page: number, pageItems: number) {
@@ -34,6 +35,8 @@ export class PostsService {
   }
 
   async create(userId: string, data: CreatePostDto) {
+    await this.usersService.findById(userId);
+    
     return this.postsRepository.create({
       ...data,
       userId,
@@ -41,6 +44,8 @@ export class PostsService {
   }
 
   async update(postId: string, data: UpdatePostDto) {
+    await this.findById(postId);
+    
     return this.postsRepository.update(postId, data);
   }
 
