@@ -2,10 +2,10 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { postService } from '@/services/postService'
 import type { Post } from '@/interfaces/Post'
 
-export function usePosts() {
+export function usePosts(page = 1, pageItems = 10) {
   return useQuery({
-    queryKey: ['posts'],
-    queryFn: postService.getAll,
+    queryKey: ['posts', page, pageItems],
+    queryFn: () => postService.getAll(page, pageItems),
   })
 }
 

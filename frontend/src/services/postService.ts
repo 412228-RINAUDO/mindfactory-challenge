@@ -3,7 +3,8 @@ import { HttpMethod } from '@/enums/httpMethods'
 import type { Post, PostsResponse } from '@/interfaces/Post'
 
 export const postService = {
-  getAll: () => apiClient<PostsResponse>('/posts'),
+  getAll: (page = 1, pageItems = 10) => 
+    apiClient<PostsResponse>(`/posts?page=${page}&page_items=${pageItems}`),
   
   getById: (id: string) => apiClient<Post>(`/posts/${id}`),
   
