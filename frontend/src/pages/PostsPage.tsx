@@ -1,30 +1,24 @@
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { PenLine } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PostCard } from "@/components/PostCard";
 import { LoadingState } from "@/components/LoadingState";
 import { ErrorState } from "@/components/ErrorState";
-import { usePosts } from "@/hooks/usePosts";
+import { useInfinitePosts } from "@/hooks/usePosts";
 import { useAuth } from "@/contexts/AuthContext";
-import type { Post } from "@/interfaces/Post";
 
 export function PostsPage() {
   const { user } = useAuth();
-  const [page, setPage] = useState(1);
-  const [allPosts, setAllPosts] = useState<Post[]>([]);
-  const { data: response, isLoading, error } = usePosts(page, 5);
+  const { 
+    data, 
+    isLoading, 
+    error, 
+    fetchNextPage, 
+    hasNextPage, 
+    isFetchingNextPage 
+  } = useInfinitePosts(5);
 
-  useEffect(() => {
-    if (response?.data) {
-      setAllPosts(prev => {
-        const newPosts = response.data.filter(
-          post => !prev.some(p => p.id === post.id)
-        );
-        return [...prev, ...newPosts];
-      });
-    }
-  }, [response?.data]);
+  const allPosts = data?.pages.flatMap(page => page.data) ?? [];
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-12">
@@ -51,7 +45,7 @@ export function PostsPage() {
           Publicaciones recientes
         </h2>
 
-        {isLoading && page === 1 && <LoadingState message="Cargando posts..." />}
+        {isLoading && <LoadingState message="Cargando posts..." />}
 
         {error && <ErrorState message="Error al cargar los posts" />}
 
@@ -75,15 +69,16 @@ export function PostsPage() {
             </p>
           </div>
         )}
-        {response?.meta && page < response.meta.totalPages && (
+        
+        {hasNextPage && (
           <div className="mt-10 flex justify-center">
             <Button 
               variant="outline" 
               className="gap-2 bg-transparent"
-              onClick={() => setPage(prev => prev + 1)}
-              disabled={isLoading}
+              onClick={() => fetchNextPage()}
+              disabled={isFetchingNextPage}
             >
-              {isLoading && page > 1 ? "Cargando..." : "Cargar más publicaciones"}
+              {isFetchingNextPage ? "Cargando..." : "Cargar más publicaciones"}
             </Button>
           </div>
         )}

@@ -1,9 +1,10 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { Heart, MessageCircle, Pencil, Send } from "lucide-react";
-import { usePost } from "@/hooks/usePosts";
+import { Heart, Pencil, Send } from "lucide-react";
+import { usePost, useCreateComment } from "@/hooks/usePosts";
 import { formatDate } from "@/lib/formatDate";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 import { LoadingState } from "@/components/LoadingState";
 import { BackLink } from "@/components/BackLink";
 import { useAuth } from "@/contexts/AuthContext";
@@ -14,10 +15,26 @@ export function PostDetailPage() {
   const navigate = useNavigate();
   const { user: currentUser } = useAuth();
   const isOwner = currentUser?.id === post?.user.id;
+  const [newComment, setNewComment] = useState("");
+  const { mutate: createComment, isPending: isCreatingComment } = useCreateComment();
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [id]);
+
+  const handleSubmitComment = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newComment.trim() || !id) return;
+
+    createComment(
+      { postId: id, content: newComment },
+      {
+        onSuccess: () => {
+          setNewComment("");
+        },
+      }
+    );
+  };
 
   if (isLoading) {
     return <LoadingState message="Cargando post..." />;
@@ -80,39 +97,38 @@ export function PostDetailPage() {
       <div className="mt-12 pt-8 border-t border-border flex items-center gap-6">
         <button
           className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all ${
-            true
+            post.is_liked
               ? "border-primary bg-primary/10 text-primary"
               : "border-border hover:border-primary/50 text-muted-foreground hover:text-foreground"
           }`}
         >
-          <Heart className={`h-5 w-5 ${true ? "fill-primary" : ""}`} />
-          <span className="font-medium">{8}</span>
+          <Heart className={`h-5 w-5 ${post.is_liked ? "fill-primary" : ""}`} />
+          <span className="font-medium">{post.likes_count}</span>
         </button>
-        <div className="flex items-center gap-2 text-muted-foreground">
-          <MessageCircle className="h-5 w-5" />
-          <span className="font-medium">{3} comments</span>
-        </div>
       </div>
 
       <section className="mt-12 pt-8 border-t border-border">
         <h2 className="text-xl font-semibold mb-8">Comments ({post.comments.length})</h2>
 
         {/* Comment Form */}
-        <form className="mb-8">
-          <div className="p-4 rounded-xl border border-border/50 bg-card/30 focus-within:border-border transition-colors">
-            <textarea
-              // value={newComment}
-              // onChange={(e) => setNewComment(e.target.value)}
-              // placeholder={isAuthenticated ? "Write a comment..." : "Log in to comment"}
-              // disabled={!isAuthenticated}
-              className="w-full bg-transparent resize-none outline-none text-foreground placeholder:text-muted-foreground min-h-[80px]"
+        <form onSubmit={handleSubmitComment} className="mb-8">
+          <div className="space-y-2">
+            <Textarea
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder={currentUser?.id ? "Write a comment..." : "Log in to comment"}
+              disabled={!currentUser?.id}
+              className="min-h-[100px]"
             />
-            <div className="flex justify-end mt-2">
-              <Button type="submit" size="sm" 
-              // disabled={!isAuthenticated || !newComment.trim()} 
-              className="gap-2">
+            <div className="flex justify-end">
+              <Button 
+                type="submit" 
+                size="sm" 
+                disabled={!currentUser?.id || !newComment.trim() || isCreatingComment} 
+                className="gap-2"
+              >
                 <Send className="h-4 w-4" />
-                Post comment
+                {isCreatingComment ? "Posting..." : "Post comment"}
               </Button>
             </div>
           </div>
@@ -131,7 +147,7 @@ export function PostDetailPage() {
               {post.comments.map((comment, i) => (
                 <div
                   key={i}
-                  className="p-5 rounded-xl border border-border/50 bg-card/30"
+                  className="p-5 rounded-xl border border-border/50 bg-card/30 hover:bg-card/50 hover:border-border transition-all duration-200"
                 >
                   <div className="flex items-center justify-between mb-3">
                     <Link
