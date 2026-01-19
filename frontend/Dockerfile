@@ -12,7 +12,7 @@ COPY . .
 
 RUN pnpm run build
 
-FROM nginx:alpine AS production
+FROM nginx:alpine
 
 COPY --from=builder /app/dist /usr/share/nginx/html
 

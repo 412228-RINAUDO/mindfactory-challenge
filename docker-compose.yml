@@ -10,8 +10,7 @@ services:
     container_name: mindfactory-backend
     restart: unless-stopped
     depends_on:
-      mindfactory-db:
-        condition: service_healthy
+      - mindfactory-db
     env_file: 
       - .env
     ports:
@@ -28,11 +27,6 @@ services:
       - "5432:5432"
     volumes:
       - mindfactory-db-data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
   adminer:
     image: adminer
     restart: always
