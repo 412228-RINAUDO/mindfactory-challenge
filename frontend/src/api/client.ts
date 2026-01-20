@@ -3,6 +3,13 @@ import { localStorageService } from '@/services/localStorageService'
 
 const API_URL = "/api/v1"
 
+interface ApiError {
+  statusCode: number
+  errorCode: string
+  message: string | string[]
+  validationErrors?: string[]
+}
+
 export async function apiClient<T>(
   endpoint: string,
   options?: RequestInit
@@ -18,7 +25,13 @@ export async function apiClient<T>(
   })
 
   if (!response.ok) {
-    throw new Error(`API Error: ${response.status} ${response.statusText}`)
+    const errorData: ApiError = await response.json().catch(() => ({
+      statusCode: response.status,
+      errorCode: 'UNKNOWN_ERROR',
+      message: response.statusText,
+    }))
+
+    throw errorData
   }
 
   return response.json()

@@ -1,5 +1,6 @@
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query'
 import { postService } from '@/services/postService'
+import { notificationService } from '@/services/notificationService'
 import type { Post } from '@/interfaces/Post'
 
 export function usePosts(page = 1, pageItems = 10) {
@@ -38,6 +39,10 @@ export function useCreatePost() {
     mutationFn: postService.create,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['posts'] })
+      notificationService.success('¡Post creado!', 'Tu post ha sido publicado exitosamente')
+    },
+    onError: (error) => {
+      notificationService.handleError(error)
     },
   })
 }
@@ -50,6 +55,10 @@ export function useUpdatePost() {
       postService.update(id, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['posts'] })
+      notificationService.success('¡Post actualizado!', 'Los cambios han sido guardados')
+    },
+    onError: (error) => {
+      notificationService.handleError(error)
     },
   })
 }
@@ -64,6 +73,10 @@ export function useCreateComment() {
       queryClient.invalidateQueries({ queryKey: ['posts', variables.postId] })
       queryClient.invalidateQueries({ queryKey: ['comments', variables.postId] })
       queryClient.invalidateQueries({ queryKey: ['posts'] })
+      notificationService.success('¡Comentario agregado!', 'Tu comentario ha sido publicado')
+    },
+    onError: (error) => {
+      notificationService.handleError(error)
     },
   })
 }
@@ -77,6 +90,9 @@ export function useToggleLike() {
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['posts', variables.postId] })
       queryClient.invalidateQueries({ queryKey: ['posts'] })
+    },
+    onError: (error) => {
+      notificationService.handleError(error)
     },
   })
 }

@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 import type { ReactNode } from 'react'
 import type { User } from '@/interfaces/User'
 import { localStorageService } from '@/services/localStorageService'
@@ -16,6 +17,7 @@ const AuthContext = createContext<AuthContextType | null>(null)
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     const storedUser = localStorageService.get<AuthResponse>('user')?.user;
@@ -28,6 +30,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = () => {
     setUser(null)
     localStorageService.remove('user')
+    queryClient.clear()
   }
 
   return (
