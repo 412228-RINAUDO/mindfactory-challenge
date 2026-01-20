@@ -11,8 +11,17 @@ services:
     restart: unless-stopped
     depends_on:
       - mindfactory-db
-    env_file: 
-      - .env
+    environment:
+      NODE_ENV: development
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: postgres
+      HOST: mindfactory-db
+      DATABASE_PORT: 5432
+      DATABASE_NAME: mindfactory-db
+      PORT: 8000
+      JWT_EXPIRES_IN: 24h
+      JWT_SECRET: N6zQ8Xr+M9cF4kYkqKx7b8ZKkN3nKpP0b8+Qk8yVZlU=
+      DATABASE_URL: postgresql://postgres:postgres@mindfactory-db:5432/mindfactory-db?schema=public
     ports:
       - "8000:8000"
   mindfactory-db:
