@@ -1,12 +1,12 @@
 services:
   mindfactory-nginx:
-    build: ./frontend
+    image: ghcr.io/412228-rinaudo/mindfactory-frontend:1.0
     ports:
       - "3000:80"
     restart: unless-stopped
     container_name: mindfactory-frontend
   mindfactory-backend:
-    build: ./backend
+    image: ghcr.io/412228-rinaudo/mindfactory-backend:1.0
     container_name: mindfactory-backend
     restart: unless-stopped
     depends_on:
