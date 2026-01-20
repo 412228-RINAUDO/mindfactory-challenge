@@ -16,14 +16,15 @@ Una plataforma de blog moderna y lista para producción con autenticación de us
 ## ✨ Características
 
 - 🔐 **Autenticación y Autorización** - Auth basado en JWT con hash de contraseñas usando bcrypt
-- 📝 **Gestión de Posts** - Crear, leer, actualizar y eliminar posts del blog
-- 👤 **Perfiles de Usuario** - Perfiles personalizables con biografía y avatar
-- 💬 **Interacciones** - Dar like y comentar en posts
+- 📝 **Gestión de Posts** - Crear, leer y actualizar posts del blog con paginación
+- 👤 **Perfiles de Usuario** - Ver y editar perfiles de usuario
+- 💬 **Sistema de Interacciones** - Dar like/unlike y comentar en posts
 - 🎨 **UI Moderna** - Diseño responsive con Tailwind CSS y shadcn/ui
 - 🔔 **Notificaciones Toast** - Feedback en tiempo real con Sonner
 - 🐳 **Listo para Docker** - Containerización completa con Docker Compose
-- 🧪 **Testing** - Tests unitarios y E2E con Jest y Vitest
+- 🧪 **Testing Completo** - Tests unitarios y E2E con Jest y Vitest (112 tests pasando)
 - 📱 **Responsive** - Funciona perfectamente en todos los dispositivos
+- 🔒 **Autorización** - Control de permisos para editar posts y perfiles propios
 
 ## 🛠️ Stack Tecnológico
 
