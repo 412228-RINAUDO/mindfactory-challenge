@@ -4,6 +4,8 @@ export function formatDate(dateString: string): string {
   return date.toLocaleDateString('es-ES', {
     month: 'short',
     day: 'numeric',
-    year: 'numeric'
+    year: 'numeric',
+    hour: "2-digit",
+    minute: "2-digit",
   })
 }
