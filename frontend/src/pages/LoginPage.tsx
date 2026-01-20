@@ -38,7 +38,7 @@ export function LoginPage() {
               id="email"
               data-testid="login-email-input"
               type="email"
-              placeholder="you@example.com"
+              placeholder="tu@ejemplo.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required

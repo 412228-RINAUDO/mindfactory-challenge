@@ -42,10 +42,6 @@ export class UsersService {
       }
     }
 
-    if (data.password) {
-      data.password = await bcrypt.hash(data.password, 10);
-    }
-
     return this.usersRepository.update(id, data);
   }
 }

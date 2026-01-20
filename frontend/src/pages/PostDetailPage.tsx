@@ -34,6 +34,10 @@ export function PostDetailPage() {
 
   const handleSubmitComment = (e: React.FormEvent) => {
     e.preventDefault();
+    if (!currentUser?.id) {
+      navigate("/login");
+      return;
+    }
     if (!newComment.trim() || !id) return;
 
     createComment(
@@ -47,7 +51,11 @@ export function PostDetailPage() {
   };
 
   const handleToggleLike = () => {
-    if (!currentUser?.id || !id || !post || isTogglingLike) return;
+    if (!currentUser?.id) {
+      navigate("/login");
+      return;
+    }
+    if (!id || !post || isTogglingLike) return;
     toggleLike({ postId: id, isLiked: post.is_liked });
   };
 
@@ -112,7 +120,7 @@ export function PostDetailPage() {
       <div className="mt-12 pt-8 border-t border-border flex items-center gap-6">
         <button
           onClick={handleToggleLike}
-          disabled={!currentUser?.id || isTogglingLike}
+          disabled={isTogglingLike}
           className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
             post.is_liked
               ? "border-primary bg-primary/10 text-primary"
@@ -125,7 +133,7 @@ export function PostDetailPage() {
       </div>
 
       <section className="mt-12 pt-8 border-t border-border">
-        <h2 className="text-xl font-semibold mb-8">Comments ({post.comments_count})</h2>
+        <h2 className="text-xl font-semibold mb-8">Comentarios ({post.comments_count})</h2>
 
         {/* Comment Form */}
         <form onSubmit={handleSubmitComment} className="mb-8">
@@ -133,19 +141,18 @@ export function PostDetailPage() {
             <Textarea
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
-              placeholder={currentUser?.id ? "Write a comment..." : "Log in to comment"}
-              disabled={!currentUser?.id}
+              placeholder={currentUser?.id ? "Escribe un comentario..." : "Inicia sesión para comentar"}
               className="min-h-[100px]"
             />
             <div className="flex justify-end">
               <Button 
                 type="submit" 
                 size="sm" 
-                disabled={!currentUser?.id || !newComment.trim() || isCreatingComment} 
+                disabled={!newComment.trim() || isCreatingComment} 
                 className="gap-2"
               >
                 <Send className="h-4 w-4" />
-                {isCreatingComment ? "Posting..." : "Post comment"}
+                {isCreatingComment ? "Publicando..." : "Publicar comentario"}
               </Button>
             </div>
           </div>
