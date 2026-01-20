@@ -50,7 +50,7 @@ describe('PostCard', () => {
   })
 
   it('should render formatted date', () => {
-    screen.getByText('15 ene 2024')
+    screen.getByText(/15 ene 2024, \d{2}:\d{2}/)
   })
 
   it('should navigate to post detail when clicking on the post area', async () => {

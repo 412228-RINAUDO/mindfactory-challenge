@@ -9,7 +9,7 @@ describe('formatDate', () => {
 
   it('should return a string in Spanish date format', () => {
     const result = formatDate('2024-06-20T12:00:00Z')
-    expect(result).toMatch(/^\d{1,2} [a-z]{3,4}\.? \d{4}$/)
+    expect(result).toMatch(/^\d{1,2} [a-z]{3,4}\.? \d{4}, \d{2}:\d{2}$/)
   })
 
   it('should handle different date inputs consistently', () => {
