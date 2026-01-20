@@ -42,6 +42,7 @@ export class PostsRepository implements IPostsRepository {
         user: true,
         _count: {
           select: {
+            comments: true,
             likes: true,
           },
         },

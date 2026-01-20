@@ -167,6 +167,14 @@ describe('Posts (e2e)', () => {
 
       const postId = createResponse.body.id;
 
+      // Create a comment
+      await request(app.getHttpServer())
+        .post(`/posts/${postId}/comments`)
+        .set('Authorization', `Bearer ${authToken}`)
+        .send({
+          content: 'Test Comment',
+        });
+
       // Add a like
       await request(app.getHttpServer())
         .patch(`/posts/${postId}/like`)
@@ -182,6 +190,7 @@ describe('Posts (e2e)', () => {
       expect(response.body).toHaveProperty('title', 'Test Post');
       expect(response.body).toHaveProperty('content', 'Test Content');
       expect(response.body).toHaveProperty('likes_count', 1);
+      expect(response.body).toHaveProperty('comments_count', 1);
       expect(response.body).toHaveProperty('is_liked', true);
       expect(response.body).toHaveProperty('user');
       expect(response.body.user).toHaveProperty('name', 'Test User');

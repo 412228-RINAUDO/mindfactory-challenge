@@ -6,6 +6,7 @@ export class PostDetailResponseDto {
   title: string;
   content: string;
   likes_count: number;
+  comments_count: number;
   is_liked: boolean;
   user: PostUserResponseDto;
   created_at: Date;
@@ -15,6 +16,7 @@ export class PostDetailResponseDto {
     this.title = post.title;
     this.content = post.content;
     this.likes_count = post._count.likes;
+    this.comments_count = post._count.comments;
     this.is_liked = post.likes ? post.likes.length > 0 : false;
     this.user = new PostUserResponseDto(post.user);
     this.created_at = post.createdAt;

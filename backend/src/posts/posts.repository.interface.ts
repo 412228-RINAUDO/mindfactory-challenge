@@ -8,7 +8,7 @@ export type PostWithUserAndCommentsCount = Post & {
 
 export type PostWithUser = Post & { 
   user: User; 
-  _count: { likes: number };
+  _count: { comments: number; likes: number };
   likes?: Like[];
 };
 
