@@ -120,7 +120,6 @@ export function PostDetailPage() {
       <div className="mt-12 pt-8 border-t border-border flex items-center gap-6">
         <button
           onClick={handleToggleLike}
-          disabled={isTogglingLike}
           className={`flex items-center gap-2 px-4 py-2 rounded-full border transition-all disabled:opacity-50 disabled:cursor-not-allowed ${
             post.is_liked
               ? "border-primary bg-primary/10 text-primary"
