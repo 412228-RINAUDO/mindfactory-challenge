@@ -1,5 +1,3 @@
-import type { Comment } from "./Comment";
-
 export interface UserPost {
   id: string
   name: string
@@ -17,9 +15,8 @@ export interface Post {
   comments_count: number
 }
 
-export interface PostDetail extends Omit<Post, 'comments_count' | 'is_liked'> {
-  comments: Comment[]
-  is_liked: boolean
+export interface PostDetail extends Post {
+  likes: Array<{ user_id: string }>
 }
 
 export interface PostsResponse {

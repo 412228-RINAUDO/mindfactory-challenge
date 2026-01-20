@@ -17,9 +17,15 @@ vi.mock('react-router-dom', async () => {
 })
 
 const mockUsePost = vi.fn()
+const mockUseCreateComment = vi.fn()
+const mockUseToggleLike = vi.fn()
+const mockUseInfiniteComments = vi.fn()
 
 vi.mock('@/hooks/usePosts', () => ({
   usePost: (id: string) => mockUsePost(id),
+  useCreateComment: () => mockUseCreateComment(),
+  useToggleLike: () => mockUseToggleLike(),
+  useInfiniteComments: () => mockUseInfiniteComments(),
 }))
 
 const mockUseAuth = vi.fn()
@@ -43,6 +49,10 @@ describe('PostDetailPage', () => {
       email: 'john@example.com',
     },
     created_at: '2024-01-15T10:00:00Z',
+    comments_count: 0,
+    likes_count: 0,
+    is_liked: false,
+    likes: [],
   }
 
   const mockCurrentUser = {
@@ -60,6 +70,20 @@ describe('PostDetailPage', () => {
       user: null,
       setUser: vi.fn(),
       logout: vi.fn(),
+    })
+    mockUseCreateComment.mockReturnValue({
+      mutate: vi.fn(),
+      isPending: false,
+    })
+    mockUseToggleLike.mockReturnValue({
+      mutate: vi.fn(),
+      isPending: false,
+    })
+    mockUseInfiniteComments.mockReturnValue({
+      data: { pages: [{ data: [] }] },
+      fetchNextPage: vi.fn(),
+      hasNextPage: false,
+      isFetchingNextPage: false,
     })
   })
 

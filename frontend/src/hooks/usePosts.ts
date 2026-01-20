@@ -62,6 +62,7 @@ export function useCreateComment() {
       postService.createComment(postId, { content }),
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['posts', variables.postId] })
+      queryClient.invalidateQueries({ queryKey: ['comments', variables.postId] })
       queryClient.invalidateQueries({ queryKey: ['posts'] })
     },
   })
@@ -77,5 +78,20 @@ export function useToggleLike() {
       queryClient.invalidateQueries({ queryKey: ['posts', variables.postId] })
       queryClient.invalidateQueries({ queryKey: ['posts'] })
     },
+  })
+}
+
+export function useInfiniteComments(postId: string, pageItems = 5) {
+  return useInfiniteQuery({
+    queryKey: ['comments', postId, 'infinite', pageItems],
+    queryFn: ({ pageParam = 1 }) => postService.getComments(postId, pageParam, pageItems),
+    getNextPageParam: (lastPage) => {
+      if (lastPage.meta.page < lastPage.meta.totalPages) {
+        return lastPage.meta.page + 1;
+      }
+      return undefined;
+    },
+    initialPageParam: 1,
+    enabled: !!postId,
   })
 }

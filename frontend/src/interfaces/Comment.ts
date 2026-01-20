@@ -6,3 +6,13 @@ export interface Comment {
     created_at: string
     user: Omit<User , "password">
 }
+
+export interface CommentsResponse {
+    data: Comment[]
+    meta: {
+        page: number
+        pageItems: number
+        totalPages: number
+        totalItems: number
+    }
+}

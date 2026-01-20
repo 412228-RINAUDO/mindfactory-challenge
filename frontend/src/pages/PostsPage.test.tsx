@@ -3,10 +3,10 @@ import { render, screen } from '@testing-library/react'
 import { BrowserRouter } from 'react-router-dom'
 import { PostsPage } from './PostsPage'
 
-const mockUsePosts = vi.fn()
+const mockUseInfinitePosts = vi.fn()
 
 vi.mock('@/hooks/usePosts', () => ({
-  usePosts: () => mockUsePosts(),
+  useInfinitePosts: () => mockUseInfinitePosts(),
 }))
 
 const mockUseAuth = vi.fn()
@@ -56,10 +56,13 @@ describe('PostsPage', () => {
 
   describe('Rendering', () => {
     it('should render page title and description', () => {
-      mockUsePosts.mockReturnValue({
+      mockUseInfinitePosts.mockReturnValue({
         data: null,
         isLoading: false,
         error: null,
+        fetchNextPage: vi.fn(),
+        hasNextPage: false,
+        isFetchingNextPage: false,
       })
 
       render(
@@ -75,10 +78,13 @@ describe('PostsPage', () => {
 
   describe('User authentication states', () => {
     beforeEach(() => {
-      mockUsePosts.mockReturnValue({
+      mockUseInfinitePosts.mockReturnValue({
         data: null,
         isLoading: false,
         error: null,
+        fetchNextPage: vi.fn(),
+        hasNextPage: false,
+        isFetchingNextPage: false,
       })
     })
 
@@ -141,10 +147,13 @@ describe('PostsPage', () => {
 
   describe('Loading state', () => {
     it('should show loading message while fetching posts', () => {
-      mockUsePosts.mockReturnValue({
+      mockUseInfinitePosts.mockReturnValue({
         data: null,
         isLoading: true,
         error: null,
+        fetchNextPage: vi.fn(),
+        hasNextPage: false,
+        isFetchingNextPage: false,
       })
 
       render(
@@ -159,10 +168,13 @@ describe('PostsPage', () => {
 
   describe('Error state', () => {
     it('should show error message when posts fail to load', () => {
-      mockUsePosts.mockReturnValue({
+      mockUseInfinitePosts.mockReturnValue({
         data: null,
         isLoading: false,
         error: new Error('Failed to fetch'),
+        fetchNextPage: vi.fn(),
+        hasNextPage: false,
+        isFetchingNextPage: false,
       })
 
       render(
@@ -177,10 +189,13 @@ describe('PostsPage', () => {
 
   describe('Success state', () => {
     beforeEach(() => {
-      mockUsePosts.mockReturnValue({
-        data: { data: mockPosts },
+      mockUseInfinitePosts.mockReturnValue({
+        data: { pages: [{ data: mockPosts }] },
         isLoading: false,
         error: null,
+        fetchNextPage: vi.fn(),
+        hasNextPage: false,
+        isFetchingNextPage: false,
       })
     })
 

@@ -1,7 +1,7 @@
 import { apiClient } from '@/api/client'
 import { HttpMethod } from '@/enums/httpMethods'
 import type { Post, PostsResponse, PostDetail } from '@/interfaces/Post'
-import type { Comment } from '@/interfaces/Comment'
+import type { Comment, CommentsResponse } from '@/interfaces/Comment'
 
 export const postService = {
   getAll: (page = 1, pageItems = 10) => 
@@ -39,4 +39,7 @@ export const postService = {
   
   toggleLike: (id: string, isLiked: boolean) =>
     isLiked ? postService.unlike(id) : postService.like(id),
+  
+  getComments: (postId: string, page = 1, pageItems = 5) =>
+    apiClient<CommentsResponse>(`/posts/${postId}/comments?page=${page}&page_items=${pageItems}`),
 }

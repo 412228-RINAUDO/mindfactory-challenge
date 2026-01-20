@@ -1,6 +1,6 @@
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { Heart, Pencil, Send } from "lucide-react";
-import { usePost, useCreateComment, useToggleLike } from "@/hooks/usePosts";
+import { usePost, useCreateComment, useToggleLike, useInfiniteComments } from "@/hooks/usePosts";
 import { formatDate } from "@/lib/formatDate";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
@@ -18,6 +18,15 @@ export function PostDetailPage() {
   const [newComment, setNewComment] = useState("");
   const { mutate: createComment, isPending: isCreatingComment } = useCreateComment();
   const { mutate: toggleLike, isPending: isTogglingLike } = useToggleLike();
+  
+  const { 
+    data: commentsData, 
+    fetchNextPage, 
+    hasNextPage, 
+    isFetchingNextPage 
+  } = useInfiniteComments(id!, 5);
+
+  const allComments = commentsData?.pages.flatMap(page => page.data) ?? [];
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -116,7 +125,7 @@ export function PostDetailPage() {
       </div>
 
       <section className="mt-12 pt-8 border-t border-border">
-        <h2 className="text-xl font-semibold mb-8">Comments ({post.comments.length})</h2>
+        <h2 className="text-xl font-semibold mb-8">Comments ({post.comments_count})</h2>
 
         {/* Comment Form */}
         <form onSubmit={handleSubmitComment} className="mb-8">
@@ -143,7 +152,7 @@ export function PostDetailPage() {
         </form>
 
 
-        {post.comments.length === 0 ? (
+        {allComments.length === 0 ? (
           <div className="py-12 text-center p-6 rounded-xl border border-border/50 bg-card/30">
             <p className="text-muted-foreground">
               Aún no hay comentarios. ¡Sé el primero en compartir tu opinión!
@@ -152,7 +161,7 @@ export function PostDetailPage() {
         ) : (
           <>
             <div className="space-y-4">
-              {post.comments.map((comment, i) => (
+              {allComments.map((comment, i) => (
                 <div
                   key={i}
                   className="p-5 rounded-xl border border-border/50 bg-card/30 hover:bg-card/50 hover:border-border transition-all duration-200"
@@ -178,12 +187,18 @@ export function PostDetailPage() {
               ))}
             </div>
 
-            {/* Load More Comments Button */}
-            <div className="mt-8 flex justify-center">
-              <Button variant="outline" className="gap-2 bg-transparent">
-                Load more comments
-              </Button>
-            </div>
+            {hasNextPage && (
+              <div className="mt-8 flex justify-center">
+                <Button 
+                  variant="outline" 
+                  className="gap-2 bg-transparent"
+                  onClick={() => fetchNextPage()}
+                  disabled={isFetchingNextPage}
+                >
+                  {isFetchingNextPage ? "Cargando..." : "Cargar más comentarios"}
+                </Button>
+              </div>
+            )}
           </>
         )}
       </section>
